@@ -1,0 +1,144 @@
+body {
+    background-color: gainsboro;
+    color: red;
+    /* Définir la couleur du texte en blanc pour une meilleure lisibilité */
+    font-family: "Arial Rounded MT Bold";
+    font-size: 4vh;
+
+
+    -moz-user-select: none;
+    /* Firefox */
+    -webkit-user-select: none;
+    /* Chrome, Safari, Opéra depuis la version 15 */
+    -ms-user-select: none;
+    /* Internet explorer depuis la version 10 et Edge */
+    user-select: none;
+    /* Propriété standard */
+
+}
+
+header{
+    position: fixed;
+    display: flex;
+    left: 0;
+    top: 0;
+    right: 0;
+    padding: 1vh 1vw;
+    background-color: gold;
+}
+
+header text{
+    padding: 0 1vw;
+}
+
+#logoheader{
+    max-height: 5vh;
+    max-width: 5vw;
+    cursor: pointer;
+}
+
+#tableCentre{
+    position: absolute;
+    top : 50vh;
+    left: 50vw;
+    transform: translateX(-50%) translateY(-50%);
+    border-spacing: 1vw 2vh;
+}
+
+
+.redirect {
+    display: table-cell;
+    background-color: gold;
+    border-color: red;
+    color : red;
+    font-size: x-large;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 20vh;
+    width: 30vw;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.redirect:hover{
+    box-shadow: 0vh 0vw 0.2vh 0.2vw orangered;
+}
+
+.redirect:active{
+    box-shadow: 0vh 0vw 0.2vh 0.2vw white;
+}
+
+#testDIV{
+    position: absolute;
+
+    top: 50vh;
+}
+
+
+/*Page*/
+
+
+#tableHaute{
+    position: absolute;
+    top : 8vh;
+    left: 50vw;
+    transform: translateX(-50%);
+    border-spacing: 4vw 2vh;
+}
+
+.topButton{
+    display: table-cell;
+    background-color: gold;
+    border-color: red;
+    color : red;
+    font-size: x-large;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 8vh;
+    width: 30vw;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+#divPersonnel{
+    background-color: gold;
+    position: absolute;
+    top : 22vh;
+    left : 5vw;
+    right: 5vw;
+    padding: 3vh 4vw;
+}
+
+#tablePersonnel{
+    margin-top: 2vh ;
+    border: 2px solid black;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: medium;
+    font-weight: bold;
+}
+
+#tablePersonnel td{
+    border: 2px solid black;
+    padding: 1vh 1vw;
+}
+
+#titreTd{
+    width : 5vw;
+    text-align: center;
+}
+
+#nomTd{
+    width : 30vw;
+    text-align: center;
+}
+
+#prenomTd{
+    width : 30vw;
+    text-align: center;
+}
+
+#formationTd{
+    width : 8vw;
+    text-align: center;
+}
