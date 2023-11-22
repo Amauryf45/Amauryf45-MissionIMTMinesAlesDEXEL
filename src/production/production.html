@@ -3,15 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>DEXEL - Formation Personnel</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title">DEXEL - Formation Personnel</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 
 <body>
     <header>
-        <img id="logoheader" onClick="window.location.href='accueil.html'" src="images/logo_dexel.png" alt="logo_dexel">
+        <img id="logoheader" onClick="window.location.href='../accueil.html'" src="../images/logo_dexel.png" alt="logo_dexel">
         <text>Formation Personnel</text>
-    </header>
+    </header>   
 
     <table id="tableHaute">
         <tr>
@@ -25,7 +27,7 @@
     </table>
 
     <div id="divPersonnel">
-        <label>Rechercher : </label> <input type="search"> <button> search </button>
+        <label>Rechercher : </label> <input id="searchInput" type="search"> <button id="boutonFiltre"> search </button>
 
         <table id="tablePersonnel">
             <tr>
@@ -138,7 +140,7 @@
 -->
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/shim.min.js"></script>
-    <script src="script.js"></script>
+    <script src="scriptProd.js"></script>
 </body>
 
 </html>
