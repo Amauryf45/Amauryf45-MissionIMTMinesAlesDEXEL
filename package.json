@@ -12,5 +12,8 @@
   "devDependencies": {
     "electron": "^27.1.0",
     "xlsx": "^0.18.5"
+  },
+  "dependencies": {
+    "electron-reload": "^2.0.0-alpha.1"
   }
 }

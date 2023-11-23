@@ -43,6 +43,9 @@ async function displayEmploye(filter) {
         formationButton.textContent = "Voir les formations";
         formationButton.classList.add("formationButton");
         formationButton.id = "formationButton"+personne.ID_Personne;
+        formationButton.addEventListener('click',()=>{
+            api.openPersonnePopUp(personne);
+        })
         cellFormation.appendChild(formationButton);
     })
 }

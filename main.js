@@ -1,68 +1,108 @@
-const {app, BrowserWindow, ipcMain} = require('electron');
+const { app, BrowserWindow, ipcMain, Menu } = require('electron');
 const { windowsStore } = require('process');
 const path = require("path");
 const fs = require("fs");
+require('electron-reload')(__dirname, {
+    electron: require(`${__dirname}/node_modules/electron`),
+    ignored: /__dirname\src\data\dataFormation.xlsx/ 
+
+});
 
 const XLSX = require("xlsx");
 
 
-function createWindow (){
-    const window = new BrowserWindow({
-        height : 720,
-        width : 1080,
-        webPreferences:{
-            preload : path.join(__dirname,'preload.js')
+function createWindow() {
+    const mainWindow = new BrowserWindow({
+        height: 720,
+        width: 1080,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js')
         }
     });
-    
-    window.maximize();
 
-    ipcMain.handle('create-file',(req,data)=>{
-        if(!data || !data.title || !data.content) return false;
+    //Menu.setApplicationMenu(null);
 
-        const filePath = path.join(__dirname, 'data', `${data.title}.txt`);
-        fs.writeFileSync(filePath,data.content);
+    mainWindow.maximize();
 
-        readAndSearchExcel();
-
-        return{ success:true, filePath};
-    })
-
-    ipcMain.handle('employeData',(req,filter)=>{
+    ipcMain.handle('employeData', (req, filter) => {
 
         let listeEmployee = getEmployee(filter);
 
-        return{listeEmployee}
+        return { listeEmployee }
     })
 
-    window.loadFile('src/accueil.html')
+    ipcMain.handle('openPersonnePopUp', (req, data) => {
+        let popUpWindow = new BrowserWindow({
+            // options de la fenêtre, par exemple, fullscreen, etc.
+            modal: true,
+            parent: mainWindow,
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js')
+            }
+        });
+
+        // Charger l'URL ou le fichier HTML pour votre fenêtre
+        //popUpWindow.loadFile(`src/production/fichePersonnel.html?genre=${data.Genre}&nom=${data.Nom}&prenom=${data.Prenom}`);
+        popUpWindow.loadFile(`src/production/fichePersonnel.html`).then(() => {
+            console.log("do then");
+            popUpWindow.webContents.executeJavaScript(`updatePersData({ID_Personne: '${data.ID_Personne}',Genre: '${data.Genre}', Nom: '${data.Nom}', Prenom: '${data.Prenom}', Info: '${data.Info}'})`);
+        }).catch(error => {
+            console.error('Erreur lors de l’exécution du script :', error);
+        });
+    })
+
+    ipcMain.handle('updatePersonne', (req,data)=>{
+        updateEmployee(data);
+    })
+
+    mainWindow.loadFile('src/accueil.html')
 }
 
 app.whenReady().then(createWindow);
 
-app.on('window-all-closed',()=>{
+app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
 })
 
 
 
-function getEmployee(filter){
-    let file = path.join(__dirname, "data/dataFormation.xlsx");
+function getEmployee(filter) {
+    let file = path.join(__dirname, "src/data/dataFormation.xlsx");
 
     // Lire le fichier Excel
     let buffer = fs.readFileSync(file);
-    let workbook = XLSX.read(buffer, {type: 'buffer'});
+    let workbook = XLSX.read(buffer, { type: 'buffer' });
 
     // Extraire les données des feuilles
     let sheetPersonnes = XLSX.utils.sheet_to_json(workbook.Sheets['Personnes']);
 
-    sheetPersonnes.forEach(p=>console.log(p));
+    let filteredEmployes = sheetPersonnes.filter(personne => (comparerChaines(filter, personne.Genre) || comparerChaines(filter, personne.Prenom) || comparerChaines(filter, personne.Nom)));
 
-    let filteredEmployes = sheetPersonnes.filter(personne => (comparerChaines(filter,personne.Genre)||comparerChaines(filter,personne.Prenom)||comparerChaines(filter,personne.Nom)));
-
-    console.log(filteredEmployes);
-    
     return filteredEmployes
+}
+
+function updateEmployee(personne) {
+    console.log("update personne : "+personne)
+    console.log("nom personne : "+personne.Nom)
+
+    let file = path.join(__dirname, "src/data/dataFormation.xlsx");
+
+    // Lire le fichier Excel
+    let buffer = fs.readFileSync(file);
+    let workbook = XLSX.read(buffer, { type: 'buffer' });
+
+    let sheetPersonnes = XLSX.utils.sheet_to_json(workbook.Sheets['Personnes']);
+
+    // Trouver et mettre à jour l'employé
+    let foundIndex = sheetPersonnes.findIndex(p => p.ID_Personne == personne.ID_Personne);
+    if (foundIndex !== -1) {
+        sheetPersonnes[foundIndex] = {...sheetPersonnes[foundIndex], ...personne};
+    }
+
+    // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
+    let newSheet = XLSX.utils.json_to_sheet(sheetPersonnes);
+    workbook.Sheets['Personnes'] = newSheet;
+    XLSX.writeFile(workbook, file);
 }
 
 
@@ -74,7 +114,7 @@ function readAndSearchExcel() {
 
     // Lire le fichier Excel
     var buffer = fs.readFileSync(file);
-    var workbook = XLSX.read(buffer, {type: 'buffer'});
+    var workbook = XLSX.read(buffer, { type: 'buffer' });
 
     // Extraire les données des feuilles
     var sheetPersonnes = XLSX.utils.sheet_to_json(workbook.Sheets['Personnes']);

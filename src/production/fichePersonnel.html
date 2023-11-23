@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title"></title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <div id="zoneCentrale">
+        <div id="mainInfos">
+            <div id="pictureDiv">
+                <img id="picture" src="data/photos/pasPhoto.png" alt="photo">
+                <input id="pictureInput" class="editInput hideElement" type="file" style="color:transparent;"
+                    onchange="this.style.color = 'black';" />
+            </div>
+            <div id="genreDiv">
+                <text id="genre" class="infoElement">N.D.</text>
+                <select id="genreInput" class="editInput hideElement" type="select">
+                    <option valeur="Me">Mr</option>
+                    <option valeur="Mme">Mme</option>
+                    <option valeur="NR">N.D.</option>
+                </select>
+            </div>
+            <div id="nomDiv">
+                <text id="nom" class="infoElement">Nom</text>
+                <input id="nomInput" class="editInput hideElement" type="text">
+            </div>
+            <div id="prenomDiv">
+                <text id="prenom" class="infoElement">Prénom</text>
+                <input id="prenomInput" class="editInput hideElement" type="text">
+            </div>
+            <div id="infoDiv">
+                <text id="info" class="infoElement"> Blabla blalal bla</text>
+                <textarea name="infoArea" id="infoInput"  class="editInput hideElement" cols="30" rows="3"></textarea>
+            </div>
+            <button id="modificationButton">Modifier le profil</button>
+        </div>
+        <div id="formationDiv">
+            <table id="tableFormationsPersonne">
+                <tr>
+                    <td class="topTD">
+                        <div id="catTdPersonne"> Catégorie </div>
+                    </td>
+                    <td class="topTD">
+                        <div id="numTdPersonne"> Poste </div>
+                    </td>
+                    <td class="topTD">
+                        <div id="typeTdPersonne"> Type </div>
+                    </td>
+                    <td class="topTD">
+                        <div id="nomTdPersonne"> Nom </div>
+                    </td>
+                    <td class="topTD">
+                        <div id="dateTdPersonne"> Date </div>
+                    </td>
+                    <td class="topTD">
+                        <div id="niveauTdPersonne"> Niveau </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script src="scriptFichePers.js"></script>
+</body>
+
+</html>

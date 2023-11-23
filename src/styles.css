@@ -142,3 +142,122 @@ header text{
     width : 8vw;
     text-align: center;
 }
+
+
+/** Page Personnel */
+
+#zoneCentrale{
+    position: absolute;
+    display: block;
+    top:5vh;
+    left: 5vw;
+    right: 5vw;
+    padding: 5vh 5vw;
+    padding-bottom: 10vh;
+    background-color: gold;
+}
+
+#mainInfos{
+    display: flex;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: bold;
+}
+
+.hideElement{
+    display: none;
+}
+
+#pictureDiv{
+    display: block;
+    width: 20vw;
+    height: 30vh;
+}
+
+#picture{
+    max-width: 20vw;
+    max-height: 20vh;
+}
+
+#genreDiv{
+    margin-top: 4vh;
+    padding: 1vh 1vw;
+}
+
+#nomDiv{
+    margin-top: 4vh;
+    padding: 1vh 1vw;
+}
+
+#prenomDiv{
+    margin-top: 4vh;
+    padding: 1vh 1vw;
+}
+
+#infoDiv{
+    position: absolute;
+    top : 15vh;
+    left: 25vw;
+    padding: 1vh 1vw;
+    color: darkred;
+    font-size: medium;
+    font-weight: 500;
+}
+
+#infoInput{
+    height: 8vh;
+    width: 50vw;
+}
+
+#modificationButton{
+    position: absolute;
+    right: 10vw;
+    top: 22vh;
+}
+
+#formationDiv{
+    width: 80vw;
+}
+
+#tableFormationsPersonne{
+    font-size: 2vw;
+    border: 2px solid black;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+
+.topTD{
+    font-size: 2vw;
+    border: 2px solid black;
+    font-weight: bold;
+}
+
+#catTdPersonne{
+    width : 10vw;
+    text-align: center;
+}
+
+#numTdPersonne{
+    width : 7vw;
+    text-align: center;
+}
+
+#typeTdPersonne{
+    width : 10vw;
+    text-align: center;
+}
+
+#nomTdPersonne{
+    width : 30vw;
+    text-align: center;
+}
+
+#dateTdPersonne{
+    width : 12vw;
+    text-align: center;
+}
+
+#niveauTdPersonne{
+    width : 7vw;
+    text-align: center;
+}
