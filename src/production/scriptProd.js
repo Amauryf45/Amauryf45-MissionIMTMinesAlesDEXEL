@@ -1,13 +1,37 @@
 const title_el = document.getElementById("title");
 title_el.innerText = api.title;
 
+const divPersonnel = document.getElementById("divPersonnel");
+const divPoste = document.getElementById("divPoste");
+
+const personnelButton = document.getElementById("personnelButton");
+const posteButton = document.getElementById("posteButton");
+let page = 0;
+
+personnelButton.addEventListener("click",()=>{
+    if(page==1){
+        divPersonnel.classList.remove("hideElement");
+        divPoste.classList.add("hideElement");
+        page = 0;
+    }
+})
+
+posteButton.addEventListener("click",()=>{
+    if(page==0){
+        divPoste.classList.remove("hideElement");
+        divPersonnel.classList.add("hideElement");
+        page = 1;
+    }
+})
+
+
 displayEmploye(""); //initialement on affiche tous les employés
 
 const tablePersonnel = document.getElementById("tablePersonnel");
 
-const searchInput = document.getElementById("searchInput");
-searchInput.addEventListener('input', () => {
-    displayEmploye(searchInput.value);
+const searchInputPersonnel = document.getElementById("searchInputPersonnel");
+searchInputPersonnel.addEventListener('input', () => {
+    displayEmploye(searchInputPersonnel.value);
 });
 
 async function displayEmploye(filter) {
@@ -40,7 +64,7 @@ async function displayEmploye(filter) {
 
         var cellFormation = row.insertCell(3);
         var formationButton = document.createElement("button");
-        formationButton.textContent = "Voir les formations";
+        formationButton.textContent = "Voir le profil";
         formationButton.classList.add("formationButton");
         formationButton.id = "formationButton"+personne.ID_Personne;
         formationButton.addEventListener('click',()=>{
@@ -49,3 +73,12 @@ async function displayEmploye(filter) {
         cellFormation.appendChild(formationButton);
     })
 }
+
+
+const addEmployeButton = document.getElementById("addEmployeButton");
+
+addEmployeButton.addEventListener("click", async ()=>{
+    newID = (+((await api.checkEmployee('')).listeEmployee.pop().ID_Personne)) + 1; //convert to number the last id given and add 1
+    newPersonne = {ID_Personne: newID, Genre: 'N.D.', Nom: 'Nom', Prenom: 'Prenom', Info:''};
+    api.openPersonnePopUp(newPersonne);
+})

@@ -18,16 +18,18 @@
     <table id="tableHaute">
         <tr>
             <td>
-                <button class="topButton"> Personnel </button>
+                <button id="personnelButton" class="topButton"> Personnel </button>
             </td>
             <td>
-                <button class="topButton"> Poste </button>
+                <button id="posteButton" class="topButton"> Poste </button>
             </td>
         </tr>
     </table>
 
-    <div id="divPersonnel">
-        <label>Rechercher : </label> <input id="searchInput" type="search"> <button id="boutonFiltre"> search </button>
+    <div id="divPersonnel" class="mainDiv">
+        <label>Rechercher : </label> <input id="searchInputPersonnel" class="searchInput" type="search">
+
+        <button id="addEmployeButton">Ajouter</button>
 
         <table id="tablePersonnel">
             <tr>
@@ -46,6 +48,28 @@
             </tr>
         </table>
     </div>
+
+    <div id="divPoste" class="mainDiv hideElement">
+        <label>Rechercher : </label> <input id="searchInputPoste" class="searchInput" type="search">
+
+        <table id="tablePersonnel">
+            <tr>
+                <td>
+                    <div id="categorieTd"> Catégorie </div>
+                </td>
+                <td>
+                    <div id="numPosteTd"> Numéro </div>
+                </td>
+                <td>
+                    <div id="nomPosteTd"> Nom </div>
+                </td>
+                <td>
+                    <div id="formationPosteTd"> Formations </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
     </div>
     <script src="scriptProd.js"></script>
 </body>
