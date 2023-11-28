@@ -12,10 +12,31 @@
 <body>
     <div id="blur" class="hideElement">
     </div>
-    <div id="etesVousSur" class="hideElement">
-        <div id="etesVousSurText"> Confirmer la suppression</div>
-        <button id="etesVousSurNON"> Anuler </button>
+    <div class="popUp hideElement" id="etesVousSur">
+        <div class="popUpText"> Confirmer la suppression</div>
+        <button id="etesVousSurNON"> Annuler </button>
         <button id="etesVousSurOUI"> Supprimer </button>
+    </div>
+    <div class="popUp hideElement" id="etesVousSurFiche">
+        <div class="popUpText"> Confirmer la suppression</div>
+        <button id="etesVousSurNONFiche"> Annuler </button>
+        <button id="etesVousSurOUIFiche"> Supprimer </button>
+    </div>
+    <div class="popUp hideElement" id="nouvelleFormation">
+        <div class="popUpText"> Cette formation n'existe pas. En créer une nouvelle ?</div>
+        <button id="pasNouvelleFormation"> Annuler </button>
+        <button id="nouvelleFormation"> Créer </button>
+    </div>
+    <div class="popUp hideElement" id="quelleFormation">
+        <div class="popUpText"> Choisir le Poste </div>
+        <input type="text" id="inputNewFormation" list="listeFormations">
+        <datalist id="listeFormations">
+            <!-- Les options seront ajoutées dynamiquement ici -->
+        </datalist> 
+        <div class="popUpText"> Choisir le type de formation </div>
+        <select name="typeDeFormation" id="typeDeNewFormation"></select>
+        <button id="quelleFormationValider"> Valider </button>
+        <button id="quelleFormationAnnuler"> Annuler </button>
     </div>
     <div id="zoneCentrale">
         <div id="ficheEmploye" class="">
@@ -50,6 +71,7 @@
                 <button id="anulerModifButton" class="editInput hideElement">Annuler</button>
                 <button id="modificationButton">Modifier le profil</button>
             </div>
+            <button id="newFormationButton">Ajouter</button>
             <div id="formationDiv">
                 <table id="tableFormationsPersonne">
                     <tr>
@@ -86,6 +108,11 @@
                     </div>
                     <div class="ligne">Nom, prénom de l’évalué:
                         <span id="infoPersonneFiche" class="contentSpan">Nom Prénom</span>
+                    </div>
+                    <div class="ligne">Formateur:
+                        <span id="infoFormateurFormation" class="contentSpan">Nom Prénom</span>
+                        <input id="formateurInputFormation" class="hideElement" type="text" name="formateur">
+                        <img id="editFormateur" class="editImgFiche" src="../data/images/edit.png" alt="edit">
                     </div>
                     <div class="ligne">Evaluateur:
                         <span id="infoEvaluateurFormation" class="contentSpan">Nom Prénom</span>
@@ -153,10 +180,11 @@
                         <img id="editBilan" class="editImgFiche" src="../data/images/edit.png" alt="edit">
                     </div>
                     <div class="ligne">Commentaire: </div>
-                    <textarea style="margin-bottom: 2vh; width: 55vw;" name="commentaires" rows="4"
-                        cols="50"></textarea>
+                    <textarea id="commentaireInputFormation" style="margin-bottom: 2vh; width: 55vw;"
+                        name="commentaires" rows="4" cols="50"></textarea>
                 </div>
                 <button id="annulerFicheButton">Anuler</button> <button id="sauvegarderFicheButton">Sauvegarder</button>
+                <button id="suppFicheButton"> Supprimer la fiche</button>
             </div>
         </div>
     </div>

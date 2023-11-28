@@ -178,7 +178,7 @@ header text{
 
 #blur{
     z-index: 10;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
@@ -268,8 +268,8 @@ header text{
     top: 27vh;
 }
 
-#etesVousSur{
-    position: absolute;
+.popUp{
+    position: fixed;
     z-index: 20;
     top: 28vh;
     left: 50vw;
@@ -281,7 +281,7 @@ header text{
     padding: 5vh 5vw;
 }
 
-#etesVousSur button{
+.popUp button{
     margin: 0 1vw;
     margin-top: 3vh;
 }

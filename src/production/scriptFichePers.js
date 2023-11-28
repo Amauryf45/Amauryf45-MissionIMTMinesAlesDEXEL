@@ -111,9 +111,12 @@ function sendNewData() {
     api.updatePersonne(personne);
 }
 
+
 //affichage des formations
 
 const tableFormation = document.getElementById("tableFormationsPersonne")
+
+let currentPersonneFormationDisplayedID;
 
 async function displayFormations(employe) {
 
@@ -132,7 +135,6 @@ async function displayFormations(employe) {
         let row = tableFormation.insertRow(); // Insère une nouvelle ligne
 
         const poste = (await api.getPosteInfo(formation.ID_Formation)).infoPoste;
-        console.log("poste : " + poste)
         const formationDetails = (await api.getFormationInfo(formation.ID_Formation)).infoFormation;
 
         let cellCategorie = row.insertCell(0); // Insère la première cellule
@@ -148,7 +150,7 @@ async function displayFormations(employe) {
         cellNom.textContent = poste.NomPoste;
 
         let cellDate = row.insertCell(4);
-        cellDate.textContent = formation.Date_fin;
+        cellDate.textContent = formation.Date;
 
         let cellNiveau = row.insertCell(5);
         cellNiveau.textContent = formation.Niveau;
@@ -170,18 +172,39 @@ async function displayFormations(employe) {
 document.getElementById("annulerFicheButton").addEventListener('click', () => {
     ficheEmploye.classList.remove("hideElement");
     ficheFormation.classList.add("hideElement");
+    clearTextField();
 })
 
 document.getElementById("sauvegarderFicheButton").addEventListener('click', () => {
     sauvegarderFiche();
     ficheEmploye.classList.remove("hideElement");
     ficheFormation.classList.add("hideElement");
+    clearTextField();
 })
 
 const infoPosteFiche = document.getElementById("infoPosteFiche");
 const infoPersonneFiche = document.getElementById("infoPersonneFiche");
 
 const tableFormationFiche = document.getElementById("tableFormationFiche");
+
+const editFormateur = document.getElementById("editFormateur");
+const infoFormateurFormation = document.getElementById("infoFormateurFormation");
+const formateurInputFormation = document.getElementById("formateurInputFormation");
+editFormateur.addEventListener('click', () => {
+    if (formateurInputFormation.classList.contains("hideElement")) {
+        formateurInputFormation.classList.remove("hideElement");
+        infoFormateurFormation.classList.add('hideElement');
+        formateurInputFormation.value = infoFormateurFormation.innerHTML;
+    }
+    else {
+        formateurInputFormation.classList.add("hideElement");
+        infoFormateurFormation.classList.remove('hideElement');
+
+    }
+});
+formateurInputFormation.addEventListener('input', () => {
+    infoFormateurFormation.innerHTML = formateurInputFormation.value;
+});
 
 const editEvaluateur = document.getElementById("editEvaluateur");
 const infoEvaluateurFormation = document.getElementById("infoEvaluateurFormation");
@@ -257,6 +280,13 @@ editBilan.addEventListener('click', () => {
 });
 bilanInputFormation.addEventListener('input', () => {
     infoBilanFormation.innerHTML = bilanInputFormation.value;
+    if (bilanInputFormation.value == "Apte") {
+        document.getElementById("niveauFormation").classList.remove("hideElement");
+    }
+    else {
+        document.getElementById("niveauFormation").classList.add("hideElement");
+        document.getElementById("niveauInputFormation").value = "1";
+    }
 });
 
 const editNiveau = document.getElementById("editNiveau");
@@ -279,8 +309,31 @@ niveauInputFormation.addEventListener('input', () => {
 });
 
 
+const commentaireInputFormation = document.getElementById("commentaireInputFormation");
+
+function clearTextField() {
+    formateurInputFormation.classList.add("hideElement");
+    infoFormateurFormation.classList.remove('hideElement');
+
+    evaluateurInputFormation.classList.add("hideElement");
+    infoEvaluateurFormation.classList.remove('hideElement');
+
+    dateInputFormation.classList.add("hideElement");
+    infoDateFormation.classList.remove('hideElement');
+
+    produitInputFormation.classList.add("hideElement");
+    infoProduitFormation.classList.remove('hideElement');
+
+    bilanInputFormation.classList.add("hideElement");
+    infoBilanFormation.classList.remove('hideElement');
+
+    niveauInputFormation.classList.add("hideElement");
+    infoNiveauFormation.classList.remove('hideElement');
+}
 
 async function updateFiche(PersonneFormationID) {
+
+    currentPersonneFormationDisplayedID = PersonneFormationID;
 
     const formationPersonnesDetails = (await api.getFormationsPersonne(personne.ID_Personne)).listeFormations.find(formPers => formPers.ID_PersonneFormation == PersonneFormationID);
     const formationDetails = (await api.getFormationInfo(formationPersonnesDetails.ID_Formation)).infoFormation;
@@ -290,7 +343,9 @@ async function updateFiche(PersonneFormationID) {
 
     infoPersonneFiche.innerHTML = personne.Nom + ' ' + personne.Prenom;
 
-    infoEvaluateurFormation.innerHTML = formationPersonnesDetails.Formateur;
+    infoFormateurFormation.innerHTML = formationPersonnesDetails.Formateur;
+
+    infoEvaluateurFormation.innerHTML = formationPersonnesDetails.Evaluateur;
 
     infoDateFormation.innerHTML = formationPersonnesDetails.Date;
 
@@ -298,11 +353,14 @@ async function updateFiche(PersonneFormationID) {
 
     infoNiveauFormation.innerHTML = formationPersonnesDetails.Niveau;
 
+    commentaireInputFormation.value = formationPersonnesDetails.Commentaire;
+
     if (formationPersonnesDetails.Niveau == 1 || formationPersonnesDetails.Niveau == 2 || formationPersonnesDetails.Niveau == 3) {
         infoBilanFormation.innerHTML = "Apte";
     }
     else {
         infoBilanFormation.innerHTML = "Inapte";
+        document.getElementById("niveauFormation").classList.add("hideElement");
     }
 
     displayFormationsFiche(formationDetails);
@@ -330,7 +388,7 @@ async function displayFormationsFiche(formationDetails) {
 
     listeCompetence.forEach(async (competence, index) => {
         const competenceInfos = (await api.getCompetenceInfo(competence)).infoCompetence;
-        const persCompInfos = (await api.getPersonneCompetence(personne.ID_Personne,competence)).infoPersComp;
+        const persCompInfos = (await api.getPersonneCompetence(personne.ID_Personne, competence)).infoPersComp;
 
         let row = tableFormationFiche.insertRow(); // Insère une nouvelle ligne
 
@@ -345,16 +403,16 @@ async function displayFormationsFiche(formationDetails) {
         formateurInput.classList.add("checkbox-custom");
         formateurInput.id = "maCheckBox" + index;
         if (persCompInfos && persCompInfos.Formation == 1) {
-            console.log("personneFormation : "+ persCompInfos.Formation)
+            console.log("personneFormation : " + persCompInfos.Formation)
             formateurInput.checked = true;
-        } 
-        formateurInput.addEventListener('change', function() {
+        }
+        formateurInput.addEventListener('change', function () {
             if (this.checked) {
                 // La case est cochée
-                api.updateValidFormation(true,personne.ID_Personne,competence);
+                api.updateValidFormation(true, personne.ID_Personne, competence);
             } else {
                 // La case est décochée
-                api.updateValidFormation(false,personne.ID_Personne,competence);
+                api.updateValidFormation(false, personne.ID_Personne, competence);
             }
         });
         const formateurLabel = document.createElement("label");
@@ -375,12 +433,184 @@ async function displayFormationsFiche(formationDetails) {
         select.value = "inapte";
         if (persCompInfos) {
             select.value = persCompInfos.Niveau;
-        } 
+        }
         cellType.appendChild(select);
 
     })
 }
 
-function sauvegarderFiche(){
-    
+async function sauvegarderFiche() {
+    const formationPersonnesDetails = (await api.getFormationsPersonne(personne.ID_Personne)).listeFormations.find(formPers => formPers.ID_PersonneFormation == currentPersonneFormationDisplayedID);
+
+    newValue = formationPersonnesDetails;
+    newValue.Date = infoDateFormation.innerHTML;
+    if (infoBilanFormation.innerHTML == "Apte" || bilanInputFormation.value == "apte") {
+        newValue.Niveau = infoNiveauFormation.innerHTML;
+    }
+    else {
+        newValue.Niveau = "0"
+    }
+    newValue.Formateur = infoFormateurFormation.innerHTML;
+    newValue.Evaluateur = infoEvaluateurFormation.innerHTML;
+    newValue.Produit = infoProduitFormation.innerHTML;
+    newValue.Commentaire = commentaireInputFormation.value;
+
+    api.updateFormationPersonnes(currentPersonneFormationDisplayedID, newValue);
+    displayFormations(personne);
 }
+
+
+const suppFicheButton = document.getElementById("suppFicheButton");
+const etesVousSurFiche = document.getElementById("etesVousSurFiche");
+suppFicheButton.addEventListener("click", () => {
+    etesVousSurFiche.classList.remove("hideElement");
+    blur.classList.remove("hideElement");
+});
+
+document.getElementById("etesVousSurNONFiche").addEventListener("click", () => {
+    etesVousSurFiche.classList.add("hideElement");
+    blur.classList.add("hideElement");
+})
+
+document.getElementById("etesVousSurOUIFiche").addEventListener("click", () => {
+    api.removeFormationPersonne(currentPersonneFormationDisplayedID, personne.ID_Personne);
+    displayFormations(personne);
+    etesVousSurFiche.classList.add("hideElement");
+    blur.classList.add("hideElement");
+    ficheEmploye.classList.remove("hideElement");
+    ficheFormation.classList.add("hideElement");
+    clearTextField();
+})
+
+
+//ajout formation 
+async function getPostes() {
+    return (await api.getAllPostes()).allPostes;
+}
+
+let postes = getPostes(); // Votre liste de formations
+let inputFormation = document.getElementById("inputNewFormation");
+let listeFormations = document.getElementById("listeFormations");
+let newPosteSelect;
+
+inputFormation.addEventListener("input", () => {
+    let filtre = inputFormation.value.toLowerCase();
+    listeFormations.innerHTML = ""; // Effacer les suggestions existantes
+
+
+
+    postes.then(allPoste => {
+
+        allPoste.forEach(async (poste) => {
+
+            if (poste.NomPoste.toLowerCase().includes(filtre) || ("" + poste.ID_Poste).toLowerCase().includes(filtre)) {
+                let option = document.createElement("option");
+                option.value = poste.ID_Poste + " : " + poste.NomPoste;
+                listeFormations.appendChild(option);
+            }
+        });
+    });
+});
+
+
+inputFormation.addEventListener("focusout", () => {
+    console.log("change")
+    let filtre = inputFormation.value;
+
+    postes.then(allPoste => {
+
+        allPoste.forEach(async (poste) => {
+
+            if ((poste.ID_Poste + " : " + poste.NomPoste).includes(filtre)) {
+                newPosteSelect = poste
+                console.log("selected : " + poste);
+            }
+        });
+    });
+})
+
+
+let typeFormation = ["Fabricant", "Conducteur", "Conditionneur"]; //select les types de formations possible
+let typeDeNewFormation = document.getElementById("typeDeNewFormation");
+typeFormation.forEach(type => {
+    let option = document.createElement("option");
+    option.value = type;
+    option.innerHTML = type;
+    typeDeNewFormation.appendChild(option);
+})
+
+
+document.getElementById("newFormationButton").addEventListener("click", async () => {
+    document.getElementById("quelleFormation").classList.remove("hideElement");
+})
+
+
+
+document.getElementById("quelleFormationValider").addEventListener("click", async () => {
+
+    if (inputFormation.value != "") { //être sur que y'a pas une ancienne valeur sauvegardé alors qu'il a rien écrit
+        newPosteID = newPosteSelect.ID_Poste;
+        newPosteType = typeDeNewFormation.value;
+
+        console.log("posteID : " + newPosteID + ", posteType : " + newPosteType)
+
+
+        let ID_Formation = (await api.getFormationID(newPosteID, newPosteType)).formationID;
+
+        console.log("ID_Formation :" + ID_Formation);
+
+        if (ID_Formation == -1) {
+            //Creer une nouvelle formation ?
+            nouvelleFormation.classList.remove("hideElement");
+            blur.classList.remove("hideElement");
+
+            const nouvelleFormation = document.getElementById("nouvelleFormation");
+
+            document.getElementById("pasNouvelleFormation").addEventListener("click", () => {
+                nouvelleFormation.classList.add("hideElement");
+                blur.classList.add("hideElement");
+            })
+
+            document.getElementById("nouvelleFormation").addEventListener("click", () => {
+                newFormationID = api.createFormation(newPosteID, newPosteType);
+                nouvelleFormation.classList.add("hideElement");
+                blur.classList.add("hideElement");
+            })
+        }
+        else {
+
+            //crée une nouvelle référence de PersonneFormation
+            let newID = (+((await api.getPersonneFormationLastIndex()).lastIndex)) + 1;
+
+            let aujourdHui = new Date();
+            let annee = aujourdHui.getFullYear();
+            let mois = aujourdHui.getMonth() + 1; // Les mois commencent à 0
+            let jour = aujourdHui.getDate();
+
+            // Ajouter un zéro devant les mois et jours s'ils sont inférieurs à 10
+            mois = mois < 10 ? '0' + mois : mois;
+            jour = jour < 10 ? '0' + jour : jour;
+
+            let dateFormatee = annee + '-' + mois + '-' + jour;
+
+            let newPersFormations = { ID_PersonneFormation: newID, ID_Personne: personne.ID_Personne, ID_Formation: ID_Formation, Date: dateFormatee, Niveau: "0", Formateur: "Nom, Prénom", Evaluateur: "Nom, Prénom", Produit: "Produit en cours de production", Commentaire: "" };
+
+            api.updateFormationPersonnes(newID, newPersFormations);
+
+            displayFormations(personne);
+
+            document.getElementById("quelleFormation").classList.add("hideElement");
+            inputFormation.value = "";
+
+            ficheEmploye.classList.add("hideElement");
+            ficheFormation.classList.remove("hideElement");
+            updateFiche(newID);
+
+        }
+    }
+})
+
+document.getElementById("quelleFormationAnnuler").addEventListener('click', () => {
+    document.getElementById("quelleFormation").classList.add("hideElement");
+    inputFormation.value = "";
+})
