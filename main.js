@@ -68,9 +68,14 @@ function createWindow() {
         return { listeFormations }
     })
 
-    ipcMain.handle('getFormationID', (req, {posteID,posteType}) => {
+    ipcMain.handle('addCompToForm', (req, { compID, formationID }) => {
 
-        let formationID = getFormationID(posteID,posteType);
+        addCompToForm(compID, formationID);
+    })
+
+    ipcMain.handle('getFormationID', (req, { posteID, posteType }) => {
+
+        let formationID = getFormationID(posteID, posteType);
 
         return { formationID }
     })
@@ -82,6 +87,23 @@ function createWindow() {
         return { infoFormation }
     })
 
+    ipcMain.handle('updateFormationCompOrder', (req, { formationID, index, upOrDown }) => {
+
+        updateFormationCompOrder(formationID, index, upOrDown);
+    })
+
+    ipcMain.handle('createFormation', (req, { posteID, posteType }) => {
+
+        createFormation(posteID, posteType);
+
+    })
+
+    ipcMain.handle("getAllPostes", (req) => {
+        let allPostes = getAllPostes();
+
+        return { allPostes };
+    })
+
     ipcMain.handle('getPosteInfo', (req, posteID) => {
 
         let infoPoste = getPosteInfo(posteID);
@@ -89,11 +111,30 @@ function createWindow() {
         return { infoPoste }
     })
 
+    ipcMain.handle("getAllCompetences", (req) => {
+        let allCompetences = getAllCompetences();
+
+        return { allCompetences };
+    })
+
     ipcMain.handle('getCompetenceInfo', (req, competenceID) => {
 
         let infoCompetence = getCompetenceInfo(competenceID);
 
         return { infoCompetence }
+    })
+
+    ipcMain.handle('createCompetence', (req, { nomComp, unique }) => {
+
+        let newCompetence = createCompetence(nomComp, unique);
+
+        return { newCompetence }
+    })
+
+    ipcMain.handle('updatePersonneCompetence', (req, compInfo) => {
+
+        updatePersonneCompetence(compInfo);
+
     })
 
 
@@ -104,29 +145,24 @@ function createWindow() {
         return { infoPersComp }
     })
 
-    ipcMain.handle("getPersonneFormationLastIndex", (req)=>{
+    ipcMain.handle("getPersonneFormationLastIndex", (req) => {
         let lastIndex = getPersonneFormationLastIndex();
 
-        return {lastIndex};
+        return { lastIndex };
     })
 
-    ipcMain.handle("getAllPostes", (req)=>{
-        let allPostes = getAllPostes();
-
-        return {allPostes};
-    })
 
     ipcMain.handle('updateValidFormation', (req, { value, personneID, competenceID }) => {
 
         updateValidFormation(value, personneID, competenceID);
     })
 
-    ipcMain.handle('updateFormationPersonnes', (req, {persFormID,newValue}) => {
-        updateFormationPersonnes(persFormID,newValue);
+    ipcMain.handle('updateFormationPersonnes', (req, { persFormID, newValue }) => {
+        updateFormationPersonnes(persFormID, newValue);
     })
 
-    ipcMain.handle('removeFormationPersonne', (req, {formationID,personneID}) => {
-        removeFormationPersonne(formationID,personneID);
+    ipcMain.handle('removeFormationPersonne', (req, { formationID, personneID }) => {
+        removeFormationPersonne(formationID, personneID);
     })
 
     mainWindow.loadFile('src/accueil.html')
@@ -210,8 +246,8 @@ function getFormationsPersonne(personneID) {
     return filteredFormations
 }
 
-function getPersonneFormationLastIndex(){
-    
+function getPersonneFormationLastIndex() {
+
     // Lire le fichier Excel
     let buffer = fs.readFileSync(file);
     let workbook = XLSX.read(buffer, { type: 'buffer' });
@@ -225,9 +261,9 @@ function getPersonneFormationLastIndex(){
     return lastIndex
 }
 
-function getFormationID(posteID,posteType) {
+function getFormationID(posteID, posteType) {
 
-    console.log("posteID : "+posteID+ ", posteType : "+posteType)
+    console.log("posteID : " + posteID + ", posteType : " + posteType)
 
     // Lire le fichier Excel
     let buffer = fs.readFileSync(file);
@@ -237,7 +273,7 @@ function getFormationID(posteID,posteType) {
     let sheetFormations = XLSX.utils.sheet_to_json(workbook.Sheets['Formations']);
 
     let formationInfo = sheetFormations.find(formation => (posteID == formation.ID_Poste && posteType == formation.TypeFormation));
-    
+
     return formationInfo ? formationInfo.ID_Formation : (-1);
 }
 
@@ -255,6 +291,123 @@ function getFormationInfo(formationID) {
     return formationInfo
 }
 
+function updateFormationCompOrder(formationID, index, upOrDown) {
+
+    // Lire le fichier Excel
+    let buffer = fs.readFileSync(file);
+    let workbook = XLSX.read(buffer, { type: 'buffer' });
+
+    // Extraire les données des feuilles
+    let sheetFormations = XLSX.utils.sheet_to_json(workbook.Sheets['Formations']);
+
+    let formationIndex = sheetFormations.findIndex(formation => formationID == formation.ID_Formation);
+    console.log(sheetFormations[formationIndex].Competences)
+
+    if (formationIndex !== -1) {
+        let listeCompetence = sheetFormations[formationIndex].Competences.split(";");
+        if (upOrDown=="up") {
+            let temp = listeCompetence[index]
+            listeCompetence[index] = listeCompetence[index - 1];
+            listeCompetence[index - 1] = temp;
+        }
+        else if(upOrDown == "down") {
+            let temp = listeCompetence[index]
+            listeCompetence[index] = listeCompetence[index + 1];
+            listeCompetence[index + 1] = temp;
+        }
+        else if (upOrDown == "supp"){
+            listeCompetence.splice(index,1);
+        }
+        else{
+            console.log("this case cannot happen")
+        }
+
+        console.log(listeCompetence);
+        console.log(listeCompetence.join(";"))
+
+        sheetFormations[formationIndex].Competences = listeCompetence.join(";");
+    }
+    else {
+        console.log("weird this is not supposed to happen bc the Formation exist")
+    }
+
+    // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
+    let newSheet = XLSX.utils.json_to_sheet(sheetFormations);
+    workbook.Sheets['Formations'] = newSheet;
+    XLSX.writeFile(workbook, file);
+
+}
+
+
+
+function createFormation(newPosteID, newPosteType) {
+
+    let buffer = fs.readFileSync(file);
+    let workbook = XLSX.read(buffer, { type: 'buffer' });
+
+    let sheetFormations = XLSX.utils.sheet_to_json(workbook.Sheets['Formations']);
+
+    let newFormationID = "" + ((+sheetFormations.at(-1).ID_Formation) + 1);
+
+    // Ajouter une nouvelle formation
+    let newFormation = { ID_Formation: newFormationID, ID_Poste: newPosteID, TypeFormation: newPosteType };
+    sheetFormations.push(newFormation);
+
+    // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
+    let newSheet = XLSX.utils.json_to_sheet(sheetFormations);
+    workbook.Sheets['Formations'] = newSheet;
+    XLSX.writeFile(workbook, file);
+}
+
+function addCompToForm(compID, formationID) {
+
+    // Lire le fichier Excel
+    let buffer = fs.readFileSync(file);
+    let workbook = XLSX.read(buffer, { type: 'buffer' });
+
+    // Extraire les données des feuilles
+    let sheetFormations = XLSX.utils.sheet_to_json(workbook.Sheets['Formations']);
+
+    let formationIndex = sheetFormations.findIndex(formation => formationID == formation.ID_Formation);
+
+
+    console.log("formationID : " + formationID)
+    console.log("formationIndex : " + formationIndex)
+
+    if (formationIndex !== -1) {
+        let competence = sheetFormations[formationIndex];
+        let listeComp = competence.Competences;
+        if (listeComp.split(";").includes(compID)) {
+            console.log("compétence déjà présente")
+        }
+        else {
+            competence.Competences = listeComp + ";" + compID;
+            sheetFormations[formationIndex] = { ...sheetFormations[formationIndex], ...competence };
+        }
+    }
+    else {
+        console.log("not supposed to add a comp to a form that doesnt exist")
+    }
+
+    // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
+    let newSheet = XLSX.utils.json_to_sheet(sheetFormations);
+    workbook.Sheets['Formations'] = newSheet;
+    XLSX.writeFile(workbook, file);
+
+}
+
+
+function getAllPostes() {
+
+    // Lire le fichier Excel
+    let buffer = fs.readFileSync(file);
+    let workbook = XLSX.read(buffer, { type: 'buffer' });
+
+    // Extraire les données des feuilles
+    let sheetPostes = XLSX.utils.sheet_to_json(workbook.Sheets['Postes']);
+
+    return sheetPostes;
+}
 
 function getPosteInfo(posteID) {
 
@@ -270,6 +423,17 @@ function getPosteInfo(posteID) {
     return posteInfos
 }
 
+function getAllCompetences() {
+
+    // Lire le fichier Excel
+    let buffer = fs.readFileSync(file);
+    let workbook = XLSX.read(buffer, { type: 'buffer' });
+
+    // Extraire les données des feuilles
+    let sheetCompetences = XLSX.utils.sheet_to_json(workbook.Sheets['Competences']);
+
+    return sheetCompetences;
+}
 
 function getCompetenceInfo(competenceID) {
 
@@ -286,6 +450,57 @@ function getCompetenceInfo(competenceID) {
 }
 
 
+function createCompetence(nomComp, unique) {
+
+    let buffer = fs.readFileSync(file);
+    let workbook = XLSX.read(buffer, { type: 'buffer' });
+
+    let sheetCompetences = XLSX.utils.sheet_to_json(workbook.Sheets['Competences']);
+
+    let newCompetenceID = "" + ((+sheetCompetences.at(-1).ID_Competence) + 1);
+
+    // Ajouter une nouvelle formation
+    let newCompetence = { ID_Competence: newCompetenceID, NomComp: nomComp, Unique: unique };
+    sheetCompetences.push(newCompetence);
+
+    // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
+    let newSheet = XLSX.utils.json_to_sheet(sheetCompetences);
+    workbook.Sheets['Competences'] = newSheet;
+    XLSX.writeFile(workbook, file);
+
+    return newCompetence;
+}
+
+function updatePersonneCompetence(compInfo) {
+
+    // Lire le fichier Excel
+    let buffer = fs.readFileSync(file);
+    let workbook = XLSX.read(buffer, { type: 'buffer' });
+
+    // Extraire les données des feuilles
+    let sheetPersonnesCompetences = XLSX.utils.sheet_to_json(workbook.Sheets['PersonnesCompetences']);
+
+    let foundIndex = sheetPersonnesCompetences.findIndex(comp => comparerChaines(compInfo.ID_PersonneCompetence, comp.ID_PersonneCompetence));
+
+    if (foundIndex !== -1) {
+        console.log("pas création nouvelle personne competences")
+
+        sheetPersonnesCompetences[foundIndex] = { ...sheetPersonnesCompetences[foundIndex], ...compInfo };
+    }
+    else {
+        console.log("création nouvelle personne competences")
+        let newID = ((+sheetPersonnesCompetences.at(-1).ID_PersonneCompetence) + 1);
+        compInfo.ID_PersonneCompetence = "" + newID;
+        sheetPersonnesCompetences[newID] = { ...sheetPersonnesCompetences[newID], ...compInfo };
+    }
+
+    // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
+    let newSheet = XLSX.utils.json_to_sheet(sheetPersonnesCompetences);
+    workbook.Sheets['PersonnesCompetences'] = newSheet;
+    XLSX.writeFile(workbook, file);
+}
+
+
 function getPersonneCompetence(personneID, competenceID) {
 
     // Lire le fichier Excel
@@ -298,18 +513,6 @@ function getPersonneCompetence(personneID, competenceID) {
     let persCompInfos = sheetPersonnesCompetences.find(persComp => (comparerChaines(competenceID, persComp.ID_Competence) && comparerChaines(personneID, persComp.ID_Personne)));
 
     return persCompInfos
-}
-
-function getAllPostes() {
-
-    // Lire le fichier Excel
-    let buffer = fs.readFileSync(file);
-    let workbook = XLSX.read(buffer, { type: 'buffer' });
-
-    // Extraire les données des feuilles
-    let sheetPostes = XLSX.utils.sheet_to_json(workbook.Sheets['Postes']);
-
-    return sheetPostes;
 }
 
 
@@ -339,7 +542,7 @@ function updateValidFormation(value, personneID, competenceID) {
 
 
 
-function updateFormationPersonnes(persFormID,newValue) {
+function updateFormationPersonnes(persFormID, newValue) {
 
     // Lire le fichier Excel
     let buffer = fs.readFileSync(file);
@@ -350,7 +553,7 @@ function updateFormationPersonnes(persFormID,newValue) {
     // Trouver et mettre à jour 
     let foundIndex = sheetPersonnesFormations.findIndex(pf => pf.ID_PersonneFormation == persFormID);
     if (foundIndex !== -1) {
-        console.log("pasNewF, ce n'est pas possible normalement");
+        console.log("pasNewF");
         sheetPersonnesFormations[foundIndex] = { ...sheetPersonnesFormations[foundIndex], ...newValue };
     }
     else { //newformation
@@ -364,7 +567,7 @@ function updateFormationPersonnes(persFormID,newValue) {
 }
 
 
-function removeFormationPersonne(formationID,personneID) {
+function removeFormationPersonne(formationID, personneID) {
 
     console.log("removeFormPers")
     // Lire le fichier Excel

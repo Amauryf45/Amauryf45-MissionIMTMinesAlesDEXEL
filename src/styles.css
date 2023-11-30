@@ -410,7 +410,6 @@ header text{
 }
 
 
-
 /* Masquer la case à cocher d'origine */
 .checkbox-custom {
     display: none;
@@ -432,3 +431,6 @@ header text{
 }
 
 
+#compAlreadyExist{
+    font-size: small;
+}

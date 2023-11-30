@@ -308,7 +308,8 @@ niveauInputFormation.addEventListener('input', () => {
     infoNiveauFormation.innerHTML = niveauInputFormation.value;
 });
 
-
+let listeCompetenceValidationFormateurInput = [];
+let listeCompetenceValidationEvaluateurInput = [];
 const commentaireInputFormation = document.getElementById("commentaireInputFormation");
 
 function clearTextField() {
@@ -367,17 +368,153 @@ async function updateFiche(PersonneFormationID) {
 
 }
 
+const compAlreadyExist = document.getElementById("compAlreadyExist");
+const creerCompetenceButton = document.getElementById("creerCompetenceButton");
+
+async function getAllCompetences() {
+    return (await api.getAllCompetences()).allCompetences;
+}
+
+let inputCompetence = document.getElementById("inputNewCompetence");
+let listeCompetences = document.getElementById("listeCompetences");
+let newCompetenceSelect;
+
+inputCompetence.addEventListener("input", () => {
+    compAlreadyExist.classList.add("hideElement");
+    creerCompetenceButton.disabled = false;
+    let competences = getAllCompetences(); // Votre liste de competence
+    let filtre = inputCompetence.value.toLowerCase();
+    listeCompetences.innerHTML = ""; // Effacer les suggestions existantes
+
+    competences.then(allCompetence => {
+
+        allCompetence.forEach(async (competence) => {
+
+            if (competence.NomComp.toLowerCase().includes(filtre)) {
+                let option = document.createElement("option");
+                option.value = competence.NomComp;
+                listeCompetences.appendChild(option);
+            }
+        });
+    });
+});
+
+
+inputCompetence.addEventListener("focusout", () => {
+    let competences = getAllCompetences(); // Votre liste de competence
+    console.log("change")
+    let filtre = inputCompetence.value;
+
+    newCompetenceSelect = undefined;
+
+    competences.then(allCompetence => {
+
+        allCompetence.forEach(async (competence) => {
+
+            if (competence.NomComp.includes(filtre)) {
+
+                const formationPersonnesDetails = (await api.getFormationsPersonne(personne.ID_Personne)).listeFormations.find(formPers => formPers.ID_PersonneFormation == currentPersonneFormationDisplayedID);
+                const formationDetails = (await api.getFormationInfo(formationPersonnesDetails.ID_Formation)).infoFormation;
+                const listeCompetence = formationDetails.Competences.split(";");
+
+                console.log("listeCompetence : " + listeCompetence)
+                console.log("ID_Competence : " + competence.ID_Competence)
+
+
+                if (contient(listeCompetence, competence.ID_Competence)) {
+                    compAlreadyExist.classList.remove("hideElement");
+                    creerCompetenceButton.disabled = true;
+                }
+
+                newCompetenceSelect = competence;
+            }
+        });
+    });
+})
+
+
+const inputNewCompetence = document.getElementById("inputNewCompetence");
+const addCompButton = document.getElementById("addCompButton");
+const creerCompetence = document.getElementById("creerCompetence");
+
+const nouvelleCompetence = document.getElementById("nouvelleCompetence");
+
+addCompButton.addEventListener("click", () => {
+    creerCompetence.classList.remove("hideElement");
+    blur.classList.remove("hideElement");
+});
+
+document.getElementById("annulerCompetenceButton").addEventListener("click", () => {
+    inputNewCompetence.value = "";
+    creerCompetence.classList.add("hideElement");
+    blur.classList.add("hideElement");
+})
+
+
+creerCompetenceButton.addEventListener("click", async () => {
+    if (newCompetenceSelect) {
+        if (newCompetenceSelect.Unique != 1) {
+            let newPersComp = { ID_PersonneCompetence: "-1", ID_Personne: personne.ID_Personne, ID_Competence: newCompetenceSelect.ID_Competence, Formation: "0", Niveau: "non-ev" };
+            api.updatePersonneCompetence(newPersComp);
+        }
+        else {
+            let compPers = (await api.getPersonneCompetence(personne.ID_Personne, newCompetenceSelect.ID_Competence)).infoPersComp;
+            if (!compPers) { //si c'est une competence unique mais jamais faite par la personne pour l'instant
+                let newPersComp = { ID_PersonneCompetence: "-1", ID_Personne: personne.ID_Personne, ID_Competence: newCompetenceSelect.ID_Competence, Formation: "0", Niveau: "non-ev" };
+                api.updatePersonneCompetence(newPersComp);
+            }
+        }
+        const formationPersonnesDetails = (await api.getFormationsPersonne(personne.ID_Personne)).listeFormations.find(formPers => formPers.ID_PersonneFormation == currentPersonneFormationDisplayedID);
+        api.addCompToForm(newCompetenceSelect.ID_Competence, formationPersonnesDetails.ID_Formation)
+        creerCompetence.classList.add("hideElement");
+        blur.classList.add("hideElement");
+        updateFiche(currentPersonneFormationDisplayedID);
+    }
+    else {
+        nouvelleCompetence.classList.remove("hideElement")
+    }
+})
+
+
+document.getElementById("annulerNouvelleCompetenceButton").addEventListener("click", () => {
+    nouvelleCompetence.classList.add("hideElement");
+    blur.classList.add("hideElement");
+})
+
+document.getElementById("creerNouvelleCompetenceButton").addEventListener("click", async () => {
+    let unique = checkboxCompetenceUnique.value ? "1" : "0";
+    let newCompetence = await api.createCompetence(inputCompetence.value, unique);
+    let newPersComp = { ID_PersonneFormation: "-1", ID_Personne: personne.ID_Personne, ID_Competence: newCompetence.ID_Competence, Formation: "0", Niveau: "non-ev" }
+    api.updatePersonneCompetence(newPersComp);
+    api.addCompToForm(newCompetence.ID_Competence, currentPersonneFormationDisplayedID.ID_Formation)
+    nouvelleCompetence.classList.add("hideElement");
+    creerCompetence.classList.add("hideElement")
+    blur.classList.add("hideElement");
+    updateFiche(currentPersonneFormationDisplayedID);
+})
+
+//Il faut que je code addCompetence(en fait non) et createCompetence. Il faut que quand on affiche une competence
+// mais qu'elle existe pas on considère qu'elle est déjà validé (ancienne base de donnée)
+
 
 const options = {
     "apte": "Apte",
     "arevoir": "À revoir",
-    "inapte": "Inapte"
+    "inapte": "Inapte",
+    "non-ev": "Non evalué"
 };
 
+let listeRowCompetence = [];
+let isOrdering = false;
+let doIt = flase;
 
 async function displayFormationsFiche(formationDetails) {
     //tableFormationFiche
     const listeCompetence = formationDetails.Competences.split(";");
+
+    listeRowCompetence = [];
+    listeCompetenceValidationFormateurInput = [];
+    listeCompetenceValidationEvaluateurInput = [];
 
     for (let i = tableFormationFiche.rows.length - 1; i > 0; i--) {
         if (!tableFormationFiche.rows[i].parentNode.tagName.includes("THEAD")) {
@@ -391,6 +528,7 @@ async function displayFormationsFiche(formationDetails) {
         const persCompInfos = (await api.getPersonneCompetence(personne.ID_Personne, competence)).infoPersComp;
 
         let row = tableFormationFiche.insertRow(); // Insère une nouvelle ligne
+        listeRowCompetence.push(row);
 
         let cellNomCompetence = row.insertCell(0); // Insère la première cellule
         cellNomCompetence.classList.add("firstCol");
@@ -406,15 +544,8 @@ async function displayFormationsFiche(formationDetails) {
             console.log("personneFormation : " + persCompInfos.Formation)
             formateurInput.checked = true;
         }
-        formateurInput.addEventListener('change', function () {
-            if (this.checked) {
-                // La case est cochée
-                api.updateValidFormation(true, personne.ID_Personne, competence);
-            } else {
-                // La case est décochée
-                api.updateValidFormation(false, personne.ID_Personne, competence);
-            }
-        });
+        listeCompetenceValidationFormateurInput.push(formateurInput);
+
         const formateurLabel = document.createElement("label");
         formateurLabel.classList.add("checkbox-label");
         formateurLabel.setAttribute("for", "maCheckBox" + index)
@@ -423,6 +554,7 @@ async function displayFormationsFiche(formationDetails) {
 
         let cellType = row.insertCell(2); // Insère la troisième cellule ...
         const select = document.createElement("select");
+        listeCompetenceValidationEvaluateurInput.push({ theInput: select, thePersCompInfos: persCompInfos })
         select.name = "validation_evaluateur";
         for (let valeur in options) {
             let option = document.createElement("option");
@@ -430,14 +562,82 @@ async function displayFormationsFiche(formationDetails) {
             option.textContent = options[valeur];
             select.appendChild(option);
         }
-        select.value = "inapte";
+        select.value = "non-ev";
         if (persCompInfos) {
             select.value = persCompInfos.Niveau;
         }
         cellType.appendChild(select);
 
+
     })
+    if (isOrdering) {
+        console.log("has diplayed")
+        isOrdering = false;
+        competencesOrderButton.click();
+    }
 }
+
+
+competencesOrderButton = document.getElementById("competencesOrderButton");
+competencesOrderButton.addEventListener("click", () => {
+    if (isOrdering) {
+        listeRowCompetence.forEach(row => {
+            row.deleteCell(3);
+            competencesOrderButton.textContent = "Modifier";
+            isOrdering = false;
+        })
+    }
+    else {
+        listeRowCompetence.forEach((row, index) => {
+            let cellEditOrder = row.insertCell(3); // Insère une cellule de plus
+            let upDownDiv = document.createElement("div");
+            cellEditOrder.appendChild(upDownDiv);
+            upDownDiv.classList.add("upDownDiv");
+            let upButton = document.createElement("button");
+            upButton.textContent = "↑";
+            upButton.addEventListener("click", () => goUpComp(index));
+            upDownDiv.appendChild(upButton);
+            let downButton = document.createElement("button");
+            downButton.textContent = "↓";
+            downButton.addEventListener("click", () => goDownComp(index));
+            upDownDiv.appendChild(downButton);
+            let delCompButton = document.createElement("button");
+            delCompButton.textContent = "supp";
+            delCompButton.addEventListener("click", () => delComp(index));
+            cellEditOrder.appendChild(delCompButton);
+        })
+        competencesOrderButton.textContent = "Ok";
+        isOrdering = true;
+    }
+})
+
+async function goUpComp(index) {
+    const formationPersonnesDetails = (await api.getFormationsPersonne(personne.ID_Personne)).listeFormations.find(formPers => formPers.ID_PersonneFormation == currentPersonneFormationDisplayedID);
+    const formationDetails = (await api.getFormationInfo(formationPersonnesDetails.ID_Formation)).infoFormation;
+    if (index > 0) {
+        await api.updateFormationCompOrder(formationPersonnesDetails.ID_Formation, index, "up");
+        displayFormationsFiche(formationDetails)
+
+    }
+}
+
+async function goDownComp(index) {
+    const formationPersonnesDetails = (await api.getFormationsPersonne(personne.ID_Personne)).listeFormations.find(formPers => formPers.ID_PersonneFormation == currentPersonneFormationDisplayedID);
+    const formationDetails = (await api.getFormationInfo(formationPersonnesDetails.ID_Formation)).infoFormation;
+    if (index < listeRowCompetence.length) {
+        await api.updateFormationCompOrder(formationPersonnesDetails.ID_Formation, index, "down");
+        await displayFormationsFiche(formationDetails)
+        console.log("has diplayed")
+    }
+}
+
+async function delComp(index) {
+    const formationPersonnesDetails = (await api.getFormationsPersonne(personne.ID_Personne)).listeFormations.find(formPers => formPers.ID_PersonneFormation == currentPersonneFormationDisplayedID);
+    const formationDetails = (await api.getFormationInfo(formationPersonnesDetails.ID_Formation)).infoFormation;
+    await api.updateFormationCompOrder(formationPersonnesDetails.ID_Formation, index, "supp");
+    await displayFormationsFiche(formationDetails)
+}
+
 
 async function sauvegarderFiche() {
     const formationPersonnesDetails = (await api.getFormationsPersonne(personne.ID_Personne)).listeFormations.find(formPers => formPers.ID_PersonneFormation == currentPersonneFormationDisplayedID);
@@ -455,7 +655,32 @@ async function sauvegarderFiche() {
     newValue.Produit = infoProduitFormation.innerHTML;
     newValue.Commentaire = commentaireInputFormation.value;
 
+    console.log("newValue : " + newValue)
+
     api.updateFormationPersonnes(currentPersonneFormationDisplayedID, newValue);
+
+    listeCompetenceValidationEvaluateurInput.forEach((infos, index) => {
+        if (infos.thePersCompInfos) {
+            infos.thePersCompInfos.Niveau = infos.theInput.value;
+            infos.thePersCompInfos.DateControle = infoDateFormation.innerHTML;
+            if (infos.thePersCompInfos.Niveau != "apte" && infos.thePersCompInfos.Niveau != "non-ev") {
+                listeCompetenceValidationFormateurInput[index].checked = false;
+            }
+            infos.thePersCompInfos.Formation = listeCompetenceValidationFormateurInput[index].checked ? 1 : 0;
+            api.updatePersonneCompetence(infos.thePersCompInfos)
+        }
+    })
+
+    listeCompetenceValidationFormateurInput.forEach(compInput => {
+        if (compInput.checked) {
+            // La case est cochée
+            api.updateValidFormation(true, personne.ID_Personne, competence);
+        } else {
+            // La case est décochée
+            api.updateValidFormation(false, personne.ID_Personne, competence);
+        }
+    })
+
     displayFormations(personne);
 }
 
@@ -488,16 +713,15 @@ async function getPostes() {
     return (await api.getAllPostes()).allPostes;
 }
 
-let postes = getPostes(); // Votre liste de formations
 let inputFormation = document.getElementById("inputNewFormation");
 let listeFormations = document.getElementById("listeFormations");
 let newPosteSelect;
 
 inputFormation.addEventListener("input", () => {
+    let postes = getPostes();
+
     let filtre = inputFormation.value.toLowerCase();
     listeFormations.innerHTML = ""; // Effacer les suggestions existantes
-
-
 
     postes.then(allPoste => {
 
@@ -514,7 +738,8 @@ inputFormation.addEventListener("input", () => {
 
 
 inputFormation.addEventListener("focusout", () => {
-    console.log("change")
+    let postes = getPostes();
+
     let filtre = inputFormation.value;
 
     postes.then(allPoste => {
@@ -523,7 +748,6 @@ inputFormation.addEventListener("focusout", () => {
 
             if ((poste.ID_Poste + " : " + poste.NomPoste).includes(filtre)) {
                 newPosteSelect = poste
-                console.log("selected : " + poste);
             }
         });
     });
@@ -540,73 +764,16 @@ typeFormation.forEach(type => {
 })
 
 
-document.getElementById("newFormationButton").addEventListener("click", async () => {
+document.getElementById("newFormationButton").addEventListener("click", () => {
     document.getElementById("quelleFormation").classList.remove("hideElement");
 })
 
 
 
-document.getElementById("quelleFormationValider").addEventListener("click", async () => {
+document.getElementById("quelleFormationValider").addEventListener("click", () => {
 
     if (inputFormation.value != "") { //être sur que y'a pas une ancienne valeur sauvegardé alors qu'il a rien écrit
-        newPosteID = newPosteSelect.ID_Poste;
-        newPosteType = typeDeNewFormation.value;
-
-        console.log("posteID : " + newPosteID + ", posteType : " + newPosteType)
-
-
-        let ID_Formation = (await api.getFormationID(newPosteID, newPosteType)).formationID;
-
-        console.log("ID_Formation :" + ID_Formation);
-
-        if (ID_Formation == -1) {
-            //Creer une nouvelle formation ?
-            nouvelleFormation.classList.remove("hideElement");
-            blur.classList.remove("hideElement");
-
-            const nouvelleFormation = document.getElementById("nouvelleFormation");
-
-            document.getElementById("pasNouvelleFormation").addEventListener("click", () => {
-                nouvelleFormation.classList.add("hideElement");
-                blur.classList.add("hideElement");
-            })
-
-            document.getElementById("nouvelleFormation").addEventListener("click", () => {
-                newFormationID = api.createFormation(newPosteID, newPosteType);
-                nouvelleFormation.classList.add("hideElement");
-                blur.classList.add("hideElement");
-            })
-        }
-        else {
-
-            //crée une nouvelle référence de PersonneFormation
-            let newID = (+((await api.getPersonneFormationLastIndex()).lastIndex)) + 1;
-
-            let aujourdHui = new Date();
-            let annee = aujourdHui.getFullYear();
-            let mois = aujourdHui.getMonth() + 1; // Les mois commencent à 0
-            let jour = aujourdHui.getDate();
-
-            // Ajouter un zéro devant les mois et jours s'ils sont inférieurs à 10
-            mois = mois < 10 ? '0' + mois : mois;
-            jour = jour < 10 ? '0' + jour : jour;
-
-            let dateFormatee = annee + '-' + mois + '-' + jour;
-
-            let newPersFormations = { ID_PersonneFormation: newID, ID_Personne: personne.ID_Personne, ID_Formation: ID_Formation, Date: dateFormatee, Niveau: "0", Formateur: "Nom, Prénom", Evaluateur: "Nom, Prénom", Produit: "Produit en cours de production", Commentaire: "" };
-
-            api.updateFormationPersonnes(newID, newPersFormations);
-
-            displayFormations(personne);
-
-            document.getElementById("quelleFormation").classList.add("hideElement");
-            inputFormation.value = "";
-
-            ficheEmploye.classList.add("hideElement");
-            ficheFormation.classList.remove("hideElement");
-            updateFiche(newID);
-
-        }
+        quelleFormationValider()
     }
 })
 
@@ -614,3 +781,76 @@ document.getElementById("quelleFormationAnnuler").addEventListener('click', () =
     document.getElementById("quelleFormation").classList.add("hideElement");
     inputFormation.value = "";
 })
+
+async function quelleFormationValider() {
+    newPosteID = newPosteSelect.ID_Poste;
+    newPosteType = typeDeNewFormation.value;
+
+    console.log("posteID : " + newPosteID + ", posteType : " + newPosteType)
+
+
+    let ID_Formation = (await api.getFormationID(newPosteID, newPosteType)).formationID;
+
+    console.log("ID_Formation :" + ID_Formation);
+
+    if (ID_Formation == -1) {
+        //Creer une nouvelle formation ?
+        document.getElementById("quelleFormation").classList.add("hideElement");
+
+        const nouvelleFormation = document.getElementById("nouvelleFormation");
+        nouvelleFormation.classList.remove("hideElement");
+
+        blur.classList.remove("hideElement");
+
+        document.getElementById("pasNouvelleFormation").addEventListener("click", () => {
+            nouvelleFormation.classList.add("hideElement");
+            blur.classList.add("hideElement");
+        })
+
+        document.getElementById("nouvelleFormation").addEventListener("click", () => {
+            api.createFormation(newPosteID, newPosteType);
+            nouvelleFormation.classList.add("hideElement");
+            blur.classList.add("hideElement");
+
+            quelleFormationValider()
+        })
+    }
+    else {
+
+        //crée une nouvelle référence de PersonneFormation
+        let newID = (+((await api.getPersonneFormationLastIndex()).lastIndex)) + 1;
+
+        let aujourdHui = new Date();
+        let annee = aujourdHui.getFullYear();
+        let mois = aujourdHui.getMonth() + 1; // Les mois commencent à 0
+        let jour = aujourdHui.getDate();
+
+        // Ajouter un zéro devant les mois et jours s'ils sont inférieurs à 10
+        mois = mois < 10 ? '0' + mois : mois;
+        jour = jour < 10 ? '0' + jour : jour;
+
+        let dateFormatee = annee + '-' + mois + '-' + jour;
+
+        let newPersFormations = { ID_PersonneFormation: newID, ID_Personne: personne.ID_Personne, ID_Formation: ID_Formation, Date: dateFormatee, Niveau: "0", Formateur: "Nom, Prénom", Evaluateur: "Nom, Prénom", Produit: "Produit en cours de production", Commentaire: "" };
+
+        api.updateFormationPersonnes(newID, newPersFormations);
+
+        displayFormations(personne);
+
+        document.getElementById("quelleFormation").classList.add("hideElement");
+        inputFormation.value = "";
+
+        ficheEmploye.classList.add("hideElement");
+        ficheFormation.classList.remove("hideElement");
+        updateFiche(newID);
+
+    }
+}
+
+
+
+
+
+function contient(liste_ID, id) {
+    return liste_ID.find(idInList => idInList == id)
+}

@@ -24,15 +24,32 @@
     </div>
     <div class="popUp hideElement" id="nouvelleFormation">
         <div class="popUpText"> Cette formation n'existe pas. En créer une nouvelle ?</div>
-        <button id="pasNouvelleFormation"> Annuler </button>
         <button id="nouvelleFormation"> Créer </button>
+        <button id="pasNouvelleFormation"> Annuler </button>
+    </div>
+    <div class="popUp hideElement" id="creerCompetence">
+        <div class="popUpText"> Choisir ou donner le nom de la nouvelle compétence </div>
+        <input style="width: 80%;" type="text" id="inputNewCompetence" list="listeCompetences">
+        <datalist id="listeCompetences">
+            <!-- Les options seront ajoutées dynamiquement ici -->
+        </datalist>
+        <div id="compAlreadyExist" class="hideElement">Cette compétence existe déjà </div>
+        <button id="creerCompetenceButton"> Valider </button>
+        <button id="annulerCompetenceButton"> Annuler </button>
+    </div>
+    <div class="popUp hideElement" id="nouvelleCompetence">
+        <div class="popUpText"> Ceci est une nouvelle compétence <br>
+            Est-elle unique ?</div>
+        <input type="checkbox" id="checkboxCompetenceUnique">
+        <button id="creerNouvelleCompetenceButton"> Créer </button>
+        <button id="annulerNouvelleCompetenceButton"> Annuler </button>
     </div>
     <div class="popUp hideElement" id="quelleFormation">
         <div class="popUpText"> Choisir le Poste </div>
         <input type="text" id="inputNewFormation" list="listeFormations">
         <datalist id="listeFormations">
             <!-- Les options seront ajoutées dynamiquement ici -->
-        </datalist> 
+        </datalist>
         <div class="popUpText"> Choisir le type de formation </div>
         <select name="typeDeFormation" id="typeDeNewFormation"></select>
         <button id="quelleFormationValider"> Valider </button>
@@ -154,11 +171,14 @@
                                     <option value="apte">Apte</option>
                                     <option value="arevoir">À revoir</option>
                                     <option value="inapte">Inapte</option>
+                                    <option value="non-ev">Non évalué</option>
                                 </select>
                             </td>
                         </tr>
                         <!-- Répétez les lignes <tr> pour chaque compétence -->
                     </table>
+                    <button id="addCompButton">Ajouter une compétence</button>
+                    <button id="competencesOrderButton"> Modifier </button>
                 </div>
 
                 <div class="section">
