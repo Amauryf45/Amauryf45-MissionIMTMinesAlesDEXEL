@@ -19,7 +19,7 @@ contextBridge.exposeInMainWorld('api',{
     getCompetenceInfo: (competenceID)=> ipcRenderer.invoke('getCompetenceInfo',competenceID),
     createCompetence : (nomComp,unique)=>ipcRenderer.invoke("createCompetence",{nomComp,unique}),
     updatePersonneCompetence: (compInfo)=> ipcRenderer.invoke('updatePersonneCompetence',compInfo),
-    getPersonneCompetence: (personneID,competenceID)=> ipcRenderer.invoke('getPersonneCompetence',{personneID,competenceID}),
+    getPersonneCompetence: (personneID, posteID, competenceID)=> ipcRenderer.invoke('getPersonneCompetence',{personneID, posteID, competenceID}),
     getPersonneFormationLastIndex : ()=> ipcRenderer.invoke("getPersonneFormationLastIndex"),
     updateValidFormation: (value,personneID,competenceID)=> ipcRenderer.invoke("updateValidFormation",{value,personneID,competenceID}),
     updateFormationPersonnes: (persFormID,newValue) => ipcRenderer.invoke('updateFormationPersonnes',{persFormID,newValue}),

@@ -138,9 +138,9 @@ function createWindow() {
     })
 
 
-    ipcMain.handle('getPersonneCompetence', (req, { personneID, competenceID }) => {
+    ipcMain.handle('getPersonneCompetence', (req, { personneID, posteID, competenceID }) => {
 
-        let infoPersComp = getPersonneCompetence(personneID, competenceID);
+        let infoPersComp = getPersonneCompetence(personneID, posteID, competenceID);
 
         return { infoPersComp }
     })
@@ -418,7 +418,7 @@ function getPosteInfo(posteID) {
     // Extraire les données des feuilles
     let sheetPostes = XLSX.utils.sheet_to_json(workbook.Sheets['Postes']);
 
-    let posteInfos = sheetPostes.find(poste => comparerChaines(posteID, poste.ID_Poste));
+    let posteInfos = sheetPostes.find(poste => posteID == poste.ID_Poste);
 
     return posteInfos
 }
@@ -437,6 +437,8 @@ function getAllCompetences() {
 
 function getCompetenceInfo(competenceID) {
 
+    console.log("compID de :"+competenceID)
+
     // Lire le fichier Excel
     let buffer = fs.readFileSync(file);
     let workbook = XLSX.read(buffer, { type: 'buffer' });
@@ -444,7 +446,9 @@ function getCompetenceInfo(competenceID) {
     // Extraire les données des feuilles
     let sheetCompetences = XLSX.utils.sheet_to_json(workbook.Sheets['Competences']);
 
-    let competenceInfos = sheetCompetences.find(competence => comparerChaines(competenceID, competence.ID_Competence));
+    let competenceInfos = sheetCompetences.find(competence => competenceID == competence.ID_Competence);
+
+    console.log("compInfos : "+competenceInfos)
 
     return competenceInfos
 }
@@ -480,7 +484,7 @@ function updatePersonneCompetence(compInfo) {
     // Extraire les données des feuilles
     let sheetPersonnesCompetences = XLSX.utils.sheet_to_json(workbook.Sheets['PersonnesCompetences']);
 
-    let foundIndex = sheetPersonnesCompetences.findIndex(comp => comparerChaines(compInfo.ID_PersonneCompetence, comp.ID_PersonneCompetence));
+    let foundIndex = sheetPersonnesCompetences.findIndex(comp => compInfo.ID_PersonneCompetence == comp.ID_PersonneCompetence);
 
     if (foundIndex !== -1) {
         console.log("pas création nouvelle personne competences")
@@ -501,7 +505,7 @@ function updatePersonneCompetence(compInfo) {
 }
 
 
-function getPersonneCompetence(personneID, competenceID) {
+function getPersonneCompetence(personneID, posteID, competenceID) {
 
     // Lire le fichier Excel
     let buffer = fs.readFileSync(file);
@@ -510,7 +514,7 @@ function getPersonneCompetence(personneID, competenceID) {
     // Extraire les données des feuilles
     let sheetPersonnesCompetences = XLSX.utils.sheet_to_json(workbook.Sheets['PersonnesCompetences']);
 
-    let persCompInfos = sheetPersonnesCompetences.find(persComp => (comparerChaines(competenceID, persComp.ID_Competence) && comparerChaines(personneID, persComp.ID_Personne)));
+    let persCompInfos = sheetPersonnesCompetences.find(persComp => (competenceID==persComp.ID_Competence && (posteID == persComp.ID_Poste || "0"==persComp.ID_Poste) && personneID == persComp.ID_Personne));
 
     return persCompInfos
 }
@@ -525,7 +529,7 @@ function updateValidFormation(value, personneID, competenceID) {
     // Extraire les données des feuilles
     let sheetPersonnesCompetences = XLSX.utils.sheet_to_json(workbook.Sheets['PersonnesCompetences']);
 
-    let foundIndex = sheetPersonnesCompetences.findIndex(persComp => (comparerChaines(competenceID, persComp.ID_Competence) && comparerChaines(personneID, persComp.ID_Personne)));
+    let foundIndex = sheetPersonnesCompetences.findIndex(persComp => (competenceID == persComp.ID_Competence && personneID == persComp.ID_Personne));
 
     if (foundIndex !== -1) {
         let newValue = { ...sheetPersonnesCompetences[foundIndex] };

@@ -22,11 +22,6 @@
         <button id="etesVousSurNONFiche"> Annuler </button>
         <button id="etesVousSurOUIFiche"> Supprimer </button>
     </div>
-    <div class="popUp hideElement" id="nouvelleFormation">
-        <div class="popUpText"> Cette formation n'existe pas. En créer une nouvelle ?</div>
-        <button id="nouvelleFormation"> Créer </button>
-        <button id="pasNouvelleFormation"> Annuler </button>
-    </div>
     <div class="popUp hideElement" id="creerCompetence">
         <div class="popUpText"> Choisir ou donner le nom de la nouvelle compétence </div>
         <input style="width: 80%;" type="text" id="inputNewCompetence" list="listeCompetences">
@@ -54,6 +49,13 @@
         <select name="typeDeFormation" id="typeDeNewFormation"></select>
         <button id="quelleFormationValider"> Valider </button>
         <button id="quelleFormationAnnuler"> Annuler </button>
+        <div class="popUpText"> Temporaire, date formation ancienne formation : </div>
+        <input type="date" name="dateFormation" id="dateAncienneFormation">
+    </div>
+    <div class="popUp hideElement" id="nouvelleFormation">
+        <div class="popUpText"> Cette formation n'existe pas. En créer une nouvelle ?</div>
+        <button id="nouvelleFormationButton"> Créer </button>
+        <button id="pasNouvelleFormationButton"> Annuler </button>
     </div>
     <div id="zoneCentrale">
         <div id="ficheEmploye" class="">
@@ -155,8 +157,9 @@
                     <table id="tableFormationFiche">
                         <tr>
                             <th class="firstCol" style="width: 35vw;">Compétence</th>
-                            <th style="width: 10vw;">Validation Formateur</th>
-                            <th style="width: 15vw;">Validation Évaluateur</th>
+                            <th style="width: 8vw;">Validation Formateur</th>
+                            <th style="width: 10vw;">Date formation</th>
+                            <th style="width: 12vw;">Validation Évaluateur</th>
                         </tr>
                         <tr>
                             <td class="firstCol">Nom de la compétence</td>

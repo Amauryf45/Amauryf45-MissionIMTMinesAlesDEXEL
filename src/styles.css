@@ -287,6 +287,13 @@ header text{
 }
 
 
+#nouvelleFormation{
+    z-index: 30;
+    top: 35vh;
+    left: 50vw;
+    width: 30vw;
+}
+
 #formationDiv{
     width: 80vw;
 }
