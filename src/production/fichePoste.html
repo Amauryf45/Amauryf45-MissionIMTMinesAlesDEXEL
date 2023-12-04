@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title"></title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <div id="blur" class="hideElement">
+    </div>
+    <div class="popUp hideElement" id="etesVousSur">
+        <div class="popUpText"> Confirmer la suppression</div>
+        <button id="etesVousSurNON"> Annuler </button>
+        <button id="etesVousSurOUI"> Supprimer </button>
+    </div>
+    <div class="popUp hideElement" id="etesVousSurFiche">
+        <div class="popUpText"> Confirmer la suppression</div>
+        <button id="etesVousSurNONFiche"> Annuler </button>
+        <button id="etesVousSurOUIFiche"> Supprimer </button>
+    </div>
+    <div class="popUp hideElement" id="creerCompetence">
+        <div class="popUpText"> Choisir ou donner le nom de la nouvelle compétence </div>
+        <input style="width: 80%;" type="text" id="inputNewCompetence" list="listeCompetences">
+        <datalist id="listeCompetences">
+            <!-- Les options seront ajoutées dynamiquement ici -->
+        </datalist>
+        <div id="compAlreadyExist" class="hideElement">Cette compétence existe déjà </div>
+        <button id="creerCompetenceButton"> Valider </button>
+        <button id="annulerCompetenceButton"> Annuler </button>
+    </div>
+    <div class="popUp hideElement" id="nouvelleCompetence">
+        <div class="popUpText"> Ceci est une nouvelle compétence <br>
+            Est-elle unique ?</div>
+        <input type="checkbox" id="checkboxCompetenceUnique">
+        <button id="creerNouvelleCompetenceButton"> Créer </button>
+        <button id="annulerNouvelleCompetenceButton"> Annuler </button>
+    </div>
+    <div class="popUp hideElement" id="quelleFormation">
+        <div class="popUpText"> Choisir le Poste </div>
+        <input type="text" id="inputNewFormation" list="listeFormations">
+        <datalist id="listeFormations">
+            <!-- Les options seront ajoutées dynamiquement ici -->
+        </datalist>
+        <div class="popUpText"> Choisir le type de formation </div>
+        <select name="typeDeFormation" id="typeDeNewFormation"></select>
+        <button id="quelleFormationValider"> Valider </button>
+        <button id="quelleFormationAnnuler"> Annuler </button>
+        <div class="popUpText"> Temporaire, date formation ancienne formation : </div>
+        <input type="date" name="dateFormation" id="dateAncienneFormation">
+    </div>
+    <div class="popUp hideElement" id="nouvelleFormation">
+        <div class="popUpText"> Cette formation n'existe pas. En créer une nouvelle ?</div>
+        <button id="nouvelleFormationButton"> Créer </button>
+        <button id="pasNouvelleFormationButton"> Annuler </button>
+    </div>
+    <div id="zoneCentrale">
+        <div id="ficheEmploye" class="">
+            <div id="mainInfos">
+                <div id="pictureDiv">
+                    <img id="picture" src="data/photos/pasPhoto.png" alt="photo">
+                    <input id="pictureInput" class="editInput hideElement" type="file" style="color:transparent;"
+                        onchange="this.style.color = 'black';" />
+                </div>
+                <div id="genreDiv">
+                    <text id="genre" class="infoElement">N.D.</text>
+                    <select id="genreInput" class="editInput hideElement" type="select">
+                        <option valeur="Me">Mr</option>
+                        <option valeur="Mme">Mme</option>
+                        <option valeur="NR">N.D.</option>
+                    </select>
+                </div>
+                <div id="nomDiv">
+                    <text id="nom" class="infoElement">Nom</text>
+                    <input id="nomInput" class="editInput hideElement" type="text">
+                </div>
+                <div id="prenomDiv">
+                    <text id="prenom" class="infoElement">Prénom</text>
+                    <input id="prenomInput" class="editInput hideElement" type="text">
+                </div>
+                <div id="infoDiv">
+                    <text id="info" class="infoElement"> Informations complémentaires</text>
+                    <textarea name="infoArea" id="infoInput" class="editInput hideElement" cols="30"
+                        rows="3"></textarea>
+                </div>
+                <button id="suppProfilButton" class="editInput hideElement">Supprimer le profil</button>
+                <button id="anulerModifButton" class="editInput hideElement">Annuler</button>
+                <button id="modificationButton">Modifier le profil</button>
+            </div>
+            <button id="newFormationButton">Ajouter</button>
+            <div id="formationDiv">
+                <table id="tableFormationsPersonne">
+                    <tr>
+                        <td class="topTD">
+                            <div id="catTdPersonne"> Catégorie </div>
+                        </td>
+                        <td class="topTD">
+                            <div id="numTdPersonne"> Poste </div>
+                        </td>
+                        <td class="topTD">
+                            <div id="typeTdPersonne"> Type </div>
+                        </td>
+                        <td class="topTD">
+                            <div id="nomTdPersonne"> Nom </div>
+                        </td>
+                        <td class="topTD">
+                            <div id="dateTdPersonne"> Date </div>
+                        </td>
+                        <td class="topTD">
+                            <div id="niveauTdPersonne"> Niveau </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="ficheFormation" class="hideElement">
+            <div class="evaluation-formulaire">
+                <div class="section">
+                    <div id="titreFicheFormation">FICHE DE FORMATION</div>
+                    <div class="contentSpan subtitle">
+                        <span id="infoPosteFiche">Poste 1 - Nom du poste - TypeFormation</span>
+
+                    </div>
+                    <div class="ligne">Nom, prénom de l’évalué:
+                        <span id="infoPersonneFiche" class="contentSpan">Nom Prénom</span>
+                    </div>
+                    <div class="ligne">Formateur:
+                        <span id="infoFormateurFormation" class="contentSpan">Nom Prénom</span>
+                        <input id="formateurInputFormation" class="hideElement" type="text" name="formateur">
+                        <img id="editFormateur" class="editImgFiche" src="../data/images/edit.png" alt="edit">
+                    </div>
+                    <div class="ligne">Evaluateur:
+                        <span id="infoEvaluateurFormation" class="contentSpan">Nom Prénom</span>
+                        <input id="evaluateurInputFormation" class="hideElement" type="text" name="evaluateur">
+                        <img id="editEvaluateur" class="editImgFiche" src="../data/images/edit.png" alt="edit">
+                    </div>
+                    <div id="ligneDate" class="ligne">Date:
+                        <span id="infoDateFormation" class="contentSpan">01/01/2023</span>
+                        <input id="dateInputFormation" class="hideElement" type="date" name="date">
+                        <img id="editDate" class="editImgFiche" src="../data/images/edit.png" alt="edit">
+                    </div>
+                    <div class="ligne">Produit en cours de production:
+                        <span id="infoProduitFormation" class="contentSpan">Nom produit</span>
+                        <input id="produitInputFormation" class="hideElement" type="text" name="produit">
+                        <img id="editProduit" class="editImgFiche" src="../data/images/edit.png" alt="edit">
+                    </div>
+                    <!-- Ajoutez d'autres champs ici -->
+                </div>
+
+                <div class="section">
+                    <div class="subtitle">Critères d'évaluation</div>
+                    <!-- Répétez cette structure pour chaque critère d'évaluation -->
+                    <table id="tableFormationFiche">
+                        <tr>
+                            <th class="firstCol" style="width: 35vw;">Compétence</th>
+                            <th style="width: 8vw;">Validation Formateur</th>
+                            <th style="width: 10vw;">Date formation</th>
+                            <th style="width: 12vw;">Validation Évaluateur</th>
+                        </tr>
+                        <tr>
+                            <td class="firstCol">Nom de la compétence</td>
+                            <td>
+                                <input type="checkbox" name="validation_formateur" id="maCheckbox"
+                                    class="checkbox-custom">
+                                <label for="maCheckbox" class="checkbox-label">
+                                </label>
+                            </td>
+                            <td>
+                                <select name="validation_evaluateur">
+                                    <option value="apte">Apte</option>
+                                    <option value="arevoir">À revoir</option>
+                                    <option value="inapte">Inapte</option>
+                                    <option value="non-ev">Non évalué</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <!-- Répétez les lignes <tr> pour chaque compétence -->
+                    </table>
+                    <button id="addCompButton">Ajouter une compétence</button>
+                    <button id="competencesOrderButton"> Modifier </button>
+                </div>
+
+                <div class="section">
+                    <div class="subtitle">Conclusion</div>
+                    <div id="niveauFormation">Niveau: <span id="infoNiveauFormation" class="contentSpan">1</span>
+                        <select id="niveauInputFormation" class="hideElement" name="niveau">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                        <img id="editNiveau" class="editImgFiche" src="../data/images/edit.png" alt="edit">
+                    </div>
+                    <div class="ligne">Bilan de la formation: <span id="infoBilanFormation"
+                            class="contentSpan">Apte</span>
+                        <select id="bilanInputFormation" class="hideElement" name="bilan">
+                            <option value="Apte">Apte</option>
+                            <option value="Inapte">Inapte</option>
+                        </select>
+                        <img id="editBilan" class="editImgFiche" src="../data/images/edit.png" alt="edit">
+                    </div>
+                    <div class="ligne">Commentaire: </div>
+                    <textarea id="commentaireInputFormation" style="margin-bottom: 2vh; width: 55vw;"
+                        name="commentaires" rows="4" cols="50"></textarea>
+                </div>
+                <button id="annulerFicheButton">Anuler</button> <button id="sauvegarderFicheButton">Sauvegarder</button>
+                <button id="suppFicheButton"> Supprimer la fiche</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scriptFichePoste.js"></script>
+</body>
+
+</html>

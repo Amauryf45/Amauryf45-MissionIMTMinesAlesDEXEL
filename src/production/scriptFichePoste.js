@@ -613,14 +613,14 @@ competencesOrderButton.addEventListener("click", () => {
     console.log("modif ?")
     if (isOrdering) {
         listeRowCompetence.forEach(row => {
-            row.deleteCell(4);
+            row.deleteCell(3);
             competencesOrderButton.textContent = "Modifier";
             isOrdering = false;
         })
     }
     else {
         listeRowCompetence.forEach((row, index) => {
-            let cellEditOrder = row.insertCell(4); // Insère une cellule de plus
+            let cellEditOrder = row.insertCell(3); // Insère une cellule de plus
             let upDownDiv = document.createElement("div");
             cellEditOrder.appendChild(upDownDiv);
             upDownDiv.classList.add("upDownDiv");

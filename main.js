@@ -98,8 +98,25 @@ function createWindow() {
 
     })
 
-    ipcMain.handle("getAllPostes", (req) => {
-        let allPostes = getAllPostes();
+    ipcMain.handle('openPostePopUp', (req, data) => {
+        let popUpWindow = new BrowserWindow({
+            // options de la fenêtre, par exemple, fullscreen, etc.
+            modal: true,
+            parent: mainWindow,
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js')
+            }
+        });
+        popUpWindow.loadFile(`src/production/fichePoste.html`).then(() => {
+            console.log("do then");
+            popUpWindow.webContents.executeJavaScript(`updatePosteData({ID_Poste: '${data.ID_Poste}',NomPoste: '${data.NomPoste.replace(/(?<!\\)'/g, "\\'")}', Categorie: '${data.Categorie.replace(/(?<!\\)'/g, "\\'")}'})`);
+        }).catch(error => {
+            console.error('Erreur lors de l’exécution du script openPostePopUp :', error);
+        });
+    })
+
+    ipcMain.handle("getAllPostes", (req,filter) => {
+        let allPostes = getAllPostes(filter);
 
         return { allPostes };
     })
@@ -397,7 +414,7 @@ function addCompToForm(compID, formationID) {
 }
 
 
-function getAllPostes() {
+function getAllPostes(filter) {
 
     // Lire le fichier Excel
     let buffer = fs.readFileSync(file);
@@ -406,7 +423,10 @@ function getAllPostes() {
     // Extraire les données des feuilles
     let sheetPostes = XLSX.utils.sheet_to_json(workbook.Sheets['Postes']);
 
-    return sheetPostes;
+    let filteredPostes = sheetPostes.filter(poste => (comparerChaines(filter, poste.NomPoste) || comparerChaines(filter, poste.ID_Poste) || comparerChaines(filter, poste.Categorie)));
+
+
+    return filteredPostes;
 }
 
 function getPosteInfo(posteID) {

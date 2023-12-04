@@ -119,7 +119,7 @@ header text{
     width: 5vw;
 }
 
-#tablePersonnel{
+.mainTable{
     margin-top: 2vh ;
     border: 2px solid black;
     border-collapse: collapse;
@@ -128,7 +128,7 @@ header text{
     font-weight: bold;
 }
 
-#tablePersonnel td{
+.mainTable td{
     border: 2px solid black;
     padding: 1vh 1vw;
 }
