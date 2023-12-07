@@ -280,6 +280,7 @@ editBilan.addEventListener('click', () => {
 
     }
 });
+
 bilanInputFormation.addEventListener('input', () => {
     infoBilanFormation.innerHTML = bilanInputFormation.value;
     if (bilanInputFormation.value == "Apte") {
@@ -373,6 +374,7 @@ async function updateFiche(PersonneFormationID) {
     displayFormationsFiche(formationDetails);
 
 }
+
 
 const compAlreadyExist = document.getElementById("compAlreadyExist");
 const creerCompetenceButton = document.getElementById("creerCompetenceButton");
@@ -500,9 +502,6 @@ document.getElementById("creerNouvelleCompetenceButton").addEventListener("click
     updateFiche(currentPersonneFormationDisplayedID);
 })
 
-//Il faut que je code addCompetence(en fait non) et createCompetence. Il faut que quand on affiche une competence
-// mais qu'elle existe pas on considère qu'elle est déjà validé (ancienne base de donnée)
-
 
 const options = {
     "apte": "Apte",
@@ -539,11 +538,18 @@ async function displayFormationsFiche(formationDetails) {
         const competenceInfos = (await api.getCompetenceInfo(competence)).infoCompetence;
         let persCompInfos = (await api.getPersonneCompetence(personne.ID_Personne, currentPosteDisplayedID, competence)).infoPersComp;
 
-        if (!persCompInfos) { //Toutes les anciennes formations n'existe pas dans le nouvel outil donc on les met à la date d'ajdhui et apte car supposé déjà faite (temporaire)
+        if (!persCompInfos) { 
             let dateForm = document.getElementById("dateAncienneFormation").value;
+            console.log(dateForm)
+            let isFormed = "0";
+            if(dateForm){
+                isFormed = "1";
+            }
             let newIdPoste = competenceInfos.Unique == "1" ? "0" : currentPosteDisplayedID; //peut importe le poste si competence unique => poste "0"
-            persCompInfos = { ID_PersonneCompetence: "-1", ID_Personne: personne.ID_Personne, ID_Competence: competenceInfos.ID_Competence, ID_Poste: newIdPoste, Formation: "1", Niveau: "apte", DateControle: dateForm }
+            persCompInfos = { ID_PersonneCompetence: "-1", ID_Personne: personne.ID_Personne, ID_Competence: competenceInfos.ID_Competence, ID_Poste: newIdPoste, Formation: isFormed, Niveau: "non-ev", DateControle: dateForm }
             await api.updatePersonneCompetence(persCompInfos);
+            let createdPersComp = await api.getPersonneCompetence(persCompInfos.ID_Personne,persCompInfos.ID_Poste,persCompInfos.ID_Competence)
+            persCompInfos.ID_PersonneCompetence = createdPersComp.infoPersComp.ID_PersonneCompetence;
         }
 
         let row = tableFormationFiche.insertRow(); // Insère une nouvelle ligne
@@ -705,13 +711,13 @@ async function sauvegarderFiche() {
         }
     })
 
-    listeCompetenceValidationFormateurInput.forEach(compInput => {
+    listeCompetenceValidationFormateurInput.forEach((compInput,index) => {
         if (compInput.checked) {
             // La case est cochée
-            api.updateValidFormation(true, personne.ID_Personne, competence);
+            api.updateValidFormation(true, personne.ID_Personne, listeCompetenceValidationEvaluateurInput[index].thePersCompInfos.ID_Competence);
         } else {
             // La case est décochée
-            api.updateValidFormation(false, personne.ID_Personne, competence);
+            api.updateValidFormation(false, personne.ID_Personne,  listeCompetenceValidationEvaluateurInput[index].thePersCompInfos.ID_Competence);
         }
     })
 

@@ -11,28 +11,78 @@
 
 <body>
     <header>
-        <img id="logoheader" onClick="window.location.href='accueil.html'" src="data/images/logo_dexel.png" alt="logo_dexel">
-        <text>Formation Personnel</text>
+        <img id="logoheader" onClick="window.location.href='accueil.html'" src="data/images/logo_dexel.png"
+            alt="logo_dexel">
+        <ul id="menu">
+            <li id="accesAccueil">
+                <topMenu>Accueil</topMenu>
+                <hoverLine></hoverLine>
+                <div id="selectLine0"></div>
+            </li>
+            <li id="accesFormation"> 
+                <topMenu>Formation personnel</topMenu>
+                <div id="selectLine1" class="selectedLine"></div>
+                <hoverLine></hoverLine>
+                <ul>
+                    <li>
+                        <underMenu>Administratif</underMenu>
+                    </li>
+                    <li>
+                        <underMenu>Logistique</underMenu>
+                    </li>
+                    <li>
+                        <underMenu>Laboratoire</underMenu>
+                    </li>
+                    <li>
+                        <underMenu onClick="window.location.href='production/production.html'">Production</underMenu>
+                    </li>
+                </ul>
+            </li>
+            <li id="accesAffectation">
+                <topMenu>Affectation postes</topMenu>
+                <hoverLine></hoverLine>
+                <div id="selectLine2"></div>
+                <ul>
+                    <li>
+                        <underMenu>Production </underMenu>
+                    </li>
+                    <li>
+                        <underMenu>Autre </underMenu>
+                    </li>
+                </ul>
+            </li>
+        </ul>
     </header>
-    <table id="tableCentre">
-        <tr>
-            <td>
-                <button class="redirect"> Administratif</button>
-            </td>
-            <td>
-                <button class="redirect"> Logistique</button>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <button class="redirect"> Laboratoire</button>
-            </td>
-            <td>
-                <button onClick="window.location.href='production/production.html'" class="redirect"> Production
-                </button>
-            </td>
-        </tr>
-    </table>
+    <lineHeader></lineHeader>
+    <div id="pageAccueil">
+        <mainText>Bienvenue chez Dexel</mainText>
+        <mainCut></mainCut>
+        <sloganText>Où chaque produit raconte une histoire de qualité</sloganText>
+    </div>
+    <div id="pageFormation">
+        <table id="tableCentre">
+            <tr>
+                <td>
+                    <button class="redirect"> Administratif</button>
+                </td>
+                <td>
+                    <button class="redirect"> Logistique</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="redirect"> Laboratoire</button>
+                </td>
+                <td>
+                    <button onClick="window.location.href='production/production.html'" class="redirect"> Production
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="pageAffectation">
+
+    </div>
     <script src="script.js"></script>
 </body>
 

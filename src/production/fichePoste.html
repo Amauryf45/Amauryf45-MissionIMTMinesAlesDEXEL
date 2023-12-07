@@ -60,57 +60,45 @@
     <div id="zoneCentrale">
         <div id="ficheEmploye" class="">
             <div id="mainInfos">
-                <div id="pictureDiv">
-                    <img id="picture" src="data/photos/pasPhoto.png" alt="photo">
-                    <input id="pictureInput" class="editInput hideElement" type="file" style="color:transparent;"
-                        onchange="this.style.color = 'black';" />
+                <text id="idPosteUnavaible" class="hideElement">Numéro de poste indisponnible</text>
+                <div id="numPosteDiv">
+                    <text id="numPoste" class="infoElement">Numéro</text>
+                    <input id="numPosteInput" class="editInput hideElement" type="number">
                 </div>
-                <div id="genreDiv">
-                    <text id="genre" class="infoElement">N.D.</text>
-                    <select id="genreInput" class="editInput hideElement" type="select">
-                        <option valeur="Me">Mr</option>
-                        <option valeur="Mme">Mme</option>
-                        <option valeur="NR">N.D.</option>
-                    </select>
+                <div id="nomPosteDiv">
+                    <text id="nomPoste" class="infoElement">Nom</text>
+                    <input id="nomPosteInput" class="editInput hideElement" type="text">
+                 </div>
+                 <div id="categorieDiv">
+                    <text id="categorie" class="infoElement">Catégorie</text>
+                    <input class="editInput hideElement" type="text" id="inputCategorie" list="listeCategories">
+                    <datalist id="listeCategories">
+                        <!-- Les options seront ajoutées dynamiquement ici -->
+                    </datalist>
                 </div>
-                <div id="nomDiv">
-                    <text id="nom" class="infoElement">Nom</text>
-                    <input id="nomInput" class="editInput hideElement" type="text">
-                </div>
-                <div id="prenomDiv">
-                    <text id="prenom" class="infoElement">Prénom</text>
-                    <input id="prenomInput" class="editInput hideElement" type="text">
-                </div>
-                <div id="infoDiv">
+                <div id="infoPosteDiv">
                     <text id="info" class="infoElement"> Informations complémentaires</text>
                     <textarea name="infoArea" id="infoInput" class="editInput hideElement" cols="30"
                         rows="3"></textarea>
                 </div>
                 <button id="suppProfilButton" class="editInput hideElement">Supprimer le profil</button>
                 <button id="anulerModifButton" class="editInput hideElement">Annuler</button>
-                <button id="modificationButton">Modifier le profil</button>
+                <button id="modificationButton">Modifier le poste</button>
             </div>
-            <button id="newFormationButton">Ajouter</button>
             <div id="formationDiv">
                 <table id="tableFormationsPersonne">
                     <tr>
                         <td class="topTD">
-                            <div id="catTdPersonne"> Catégorie </div>
+                            <div id="titreTdPoste"> Titre </div>
                         </td>
                         <td class="topTD">
-                            <div id="numTdPersonne"> Poste </div>
+                            <div id="nomTdPoste"> Nom </div>
                         </td>
                         <td class="topTD">
-                            <div id="typeTdPersonne"> Type </div>
+                            <div id="prenomTdPoste"> Prénom </div>
                         </td>
                         <td class="topTD">
-                            <div id="nomTdPersonne"> Nom </div>
-                        </td>
-                        <td class="topTD">
-                            <div id="dateTdPersonne"> Date </div>
-                        </td>
-                        <td class="topTD">
-                            <div id="niveauTdPersonne"> Niveau </div>
+                            <div id="niveauTdPoste"> Niveau </div>
                         </td>
                     </tr>
                 </table>

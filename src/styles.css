@@ -1,8 +1,10 @@
 body {
-    /* background-image: url(data/images/background.jpg); */
+    background-image: url(data/images/background2.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     background-size: 100vw 100vh;
     background-color: gainsboro;
-    color: red;
+    color: rgb(231, 0, 0);
     /* Définir la couleur du texte en blanc pour une meilleure lisibilité */
     font-family: "Arial Rounded MT Bold";
     font-size: 4vh;
@@ -19,7 +21,7 @@ body {
 
 }
 
-header{
+header {
     position: fixed;
     display: flex;
     z-index: 10;
@@ -27,22 +29,210 @@ header{
     top: 0;
     right: 0;
     padding: 1vh 1vw;
-    background-color: gold;
+    background-color: whitesmoke;
+    height: 18vh;
 }
 
-header text{
-    padding: 0 1vw;
+lineHeader {
+    z-index: 9;
+    background-color: lightgrey;
+    height: 0.5vh;
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
+    top: 20vh;
 }
 
-#logoheader{
-    max-height: 5vh;
-    max-width: 5vw;
-    cursor: pointer;
-}
 
-#tableCentre{
+hoverLine {
     position: absolute;
-    top : 50vh;
+    display: block;
+    background-color: rgb(180, 182, 185);
+    width: 100%;
+    height: 0vh;
+    top: 8.2vh
+}
+
+#menu li:hover hoverLine {
+
+    height: 1vh;
+}
+
+
+
+
+.selectedLine {
+    z-index: 1000;
+    position: absolute;
+    background-color: rgb(231, 0, 0);
+    width: 100%;
+    height: 1vh;
+    top: 8.2vh
+}
+
+#logoheader {
+    cursor: pointer;
+    margin: 1vh 1vw;
+    max-height: 15vh;
+}
+
+
+#menu,
+#menu ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: center;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    position: absolute;
+    top: 11.5vh;
+    left: 20vw;
+}
+
+#menu li {
+    display: inline-block;
+    font-size: 2.2vw;
+    position: absolute;
+    width: max-content;
+}
+
+#menu li:first-child {
+    left: 6vw;
+}
+
+#menu li:nth-child(2) {
+    left: 18vw
+}
+
+#menu li:nth-child(3) {
+    left: 42vw
+}
+
+#menu ul li {
+    background-color: whitesmoke;
+    color: #000;
+    width: 100%;
+    position: relative;
+    display: flex;
+    border-radius: 0;
+    padding: 1vh 1.5vw;
+    font-size: 1.8vw;
+}
+
+#menu ul li:nth-child(1) {
+    left: 0;
+}
+
+#menu ul li:nth-child(2) {
+    left: 0;
+}
+
+#menu ul li:nth-child(3) {
+    left: 0;
+}
+
+#menu ul li:hover {
+    border-radius: 0;
+    color: rgb(231, 0, 0);
+}
+
+#menu ul li:last-child {
+    /* border-radius:0 0 8px 8px; */
+}
+
+#menu ul {
+    position: absolute;
+    top: 9vh;
+    z-index: 1000;
+    max-height: 0;
+    left: 0;
+    right: 0;
+    /* top : 30vh; */
+    overflow: hidden;
+    -moz-transition: .5s all;
+    -webkit-transition: .5s all;
+    transition: .5s all;
+}
+
+#menu li:hover ul {
+    max-height: 25em;
+}
+
+/* background des liens menus */
+/* #menu li:first-child {
+    background-color: #65537A;
+    background-image: -webkit-linear-gradient(top, #65537A 0%, #2A2333 100%);
+    background-image: linear-gradient(to bottom, #65537A 0%, #2A2333 100%);
+} */
+
+/* background des liens sous menus */
+/* #menu li:first-child li {
+    background: #2A2333;
+} */
+
+/* background des liens menus et sous menus au survol */
+#menu li:hover,
+#menu li:hover {
+    background: gainsboro;
+}
+
+/* les a href */
+#menu topMenu {
+    text-decoration: none;
+    display: block;
+    padding: 1.5vh 2.5vw;
+    color: #000;
+}
+
+
+#menu li:hover li a {
+    color: #fff;
+    text-transform: inherit;
+}
+
+#menu li:hover a,
+#menu li li:hover a {
+    color: rgb(231, 0, 0);
+}
+
+/* accueil */
+
+
+mainText {
+    position: absolute;
+    top: 35vh;
+    right: 10vw;
+    font-size: 6.5vw;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+mainCut {
+    position: absolute;
+    top: 55vh;
+    right: 10vw;
+    width: 30vw;
+    height: 4vh;
+    border-radius: 20px;
+    background-color: rgb(231, 0, 0);
+}
+
+sloganText {
+    position: absolute;
+    top: 65vh;
+    right: 10vw;
+    font-size: 2.5vw;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #000;
+}
+
+
+
+/* personnel */
+
+#tableCentre {
+    position: absolute;
+    top: 60vh;
     left: 50vw;
     transform: translateX(-50%) translateY(-50%);
     border-spacing: 1vw 2vh;
@@ -51,27 +241,30 @@ header text{
 
 .redirect {
     display: table-cell;
-    background-color: gold;
-    border-color: red;
-    color : red;
+    background-color: khaki;
+    border: solid whitesmoke;
+    border-radius: 30px;
+    color: #333030;
     font-size: x-large;
-    font-family: Arial, Helvetica, sans-serif;
-    height: 20vh;
-    width: 30vw;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    height: 25vh;
+    width: 25vw;
+    margin: 1.5vh 1.2vw;
     text-align: center;
     vertical-align: middle;
     cursor: pointer;
 }
 
-.redirect:hover{
-    box-shadow: 0vh 0vw 0.2vh 0.2vw orangered;
+.redirect:hover {
+    background-color: lemonchiffon;
 }
 
-.redirect:active{
+.redirect:active {
     box-shadow: 0vh 0vw 0.2vh 0.2vw white;
+    background-color: beige;
 }
 
-#testDIV{
+#testDIV {
     position: absolute;
 
     top: 50vh;
@@ -80,117 +273,270 @@ header text{
 
 /*Page formation*/
 
+#separateur {}
 
-#tableHaute{
+#tableHaute {
     position: absolute;
-    top : 8vh;
+    top: 22vh;
     left: 50vw;
     transform: translateX(-50%);
-    border-spacing: 4vw 2vh;
+    border-spacing: 4.5vw 2vh;
 }
 
-.topButton{
+.topButton {
     display: table-cell;
-    background-color: gold;
-    border-color: red;
-    color : red;
-    font-size: x-large;
-    font-family: Arial, Helvetica, sans-serif;
-    height: 8vh;
-    width: 30vw;
+    background-color: khaki;
+    border: solid whitesmoke;
+    border-radius: 30px;
+    color: #333030;
+    font-size: 2.1vw;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    height: 12vh;
+    width: 25vw;
     text-align: center;
     vertical-align: middle;
     cursor: pointer;
 }
 
-.mainDiv{
-    background-color: gold;
+.topButton:hover {
+    background-color: beige !important;
+}
+
+.topButton:active {
+    box-shadow: 0vh 0vw 0.2vh 0.2vw white !important;
+    background-color: lemonchiffon !important;
+}
+
+.mainDiv {
+    background-color: rgba(226, 226, 226, 0.8);
+    color: #000;
     position: absolute;
-    top : 22vh;
-    left : 5vw;
-    right: 5vw;
+    top: 40vh;
+    left: 15vw;
+    right: 15vw;
     padding: 3vh 4vw;
+    border-radius: 20px;
+    border: solid whitesmoke;
+    align-items: center;
 }
 
-#addEmployeButton{
+
+.search-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 0.7vh 0.7vw;
+    width: 20vw;
+    margin-left: 5vw;
+    margin-top: 1vh;
+    border: solid whitesmoke;
+    background-color: rgb(0, 0, 0, 0.05);
+}
+
+.search-container input[type="search"] {
+    border: none;
+    outline: none;
+    padding: 0.5vh 0.3vw;
+    flex-grow: 1;
+    background-color: rgb(0, 0, 0, 0);
+    font-family: calibri;
+    font-size: 1.5vw;
+}
+
+.search-container button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.search-icon img{
+    margin-top: 0.5vh;
+    max-height: 4vh;
+}
+
+
+.addBtn {
     position: absolute;
-    right: 5vw;
-    height: 5vh;
-    width: 5vw;
+    top: 4.2vh;
+    right: 10vw;
+    height: 7vh;
+    width: 10vw;
+    background-color: rgb(0, 0, 0, 0.05);
+    border: solid whitesmoke;
+    border-radius: 20px;
+    font-family: calibri;
+    font-size: 1.5vw;
 }
 
-.mainTable{
-    margin-top: 2vh ;
-    border: 2px solid black;
-    border-collapse: collapse;
+.addBtn:hover{
+    color:whitesmoke;
+    box-shadow: 0vh 0vw 0.1vh 0.1vw whitesmoke;
+}
+
+.addBtn:active{
+    background-color: gainsboro;
+}
+
+
+.mainTable {
+    margin-top: 2vh;
+    border: 1px solid whitesmoke;
+    border-collapse: separate;
+    border-spacing: 0;
+    /* Assurez-vous qu'il n'y a pas d'espace entre les cellules */
     table-layout: fixed;
-    font-size: medium;
-    font-weight: bold;
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: calibri;
+    font-size: 1.6vw;
+    margin: 5vh auto;
+    background-color: rgb(0, 0, 0, 0.05);
+
 }
 
-.mainTable td{
-    border: 2px solid black;
+
+
+/* Appliquer des bordures uniquement sur les bords extérieurs de la table et des cellules aux extrémités */
+.mainTable tr:first-child td:first-child {
+    border-top: 2px solid whitesmoke;
+    border-left: 2px solid whitesmoke;
+    border-top-left-radius: 10px;
+}
+
+.mainTable tr:first-child td:last-child {
+    border-top: 2px solid whitesmoke;
+    border-right: 2px solid whitesmoke;
+    border-top-right-radius: 10px;
+}
+
+.mainTable tr:last-child td:first-child {
+    border-bottom: 2px solid whitesmoke;
+    border-left: 2px solid whitesmoke;
+    border-bottom-left-radius: 10px;
+}
+
+.mainTable tr:last-child td:last-child {
+    border-bottom: 2px solid whitesmoke;
+    border-right: 2px solid whitesmoke;
+    border-bottom-right-radius: 10px;
+}
+
+.mainTable tr:first-child td {
+    border-top: 2px solid whitesmoke;
+    border-bottom: 2px solid whitesmoke;
+}
+
+.mainTable tr:last-child td {
+    border-bottom: 2px solid whitesmoke;
+}
+
+.mainTable tr td:first-child {
+    border-left: 2px solid whitesmoke;
+}
+
+.mainTable tr td:last-child {
+    border-right: 2px solid whitesmoke;
+}
+
+/* Supprimer les bordures internes */
+.mainTable tr td {
+    border: 1.5px solid whitesmoke;
+}
+
+.mainTable td {
+    border: 2px solid whitesmoke;
     padding: 1vh 1vw;
 }
 
-#titreTd{
-    width : 5vw;
+#titreTd {
+    width: 5vw;
+    text-align: center;
+    font-weight: bold;
+}
+
+#nomTd {
+    font-weight: bold;
+    width: 15vw;
     text-align: center;
 }
 
-#nomTd{
-    width : 30vw;
+#prenomTd {
+    font-weight: bold;
+    width: 15vw;
     text-align: center;
 }
 
-#prenomTd{
-    width : 30vw;
+#formationTd {
+    font-weight: bold;
+    width: 8vw;
     text-align: center;
 }
 
-#formationTd{
-    width : 8vw;
+#categorieTd {
+    font-weight: bold;
+    width: 10vw;
     text-align: center;
 }
 
-#categorieTd{
-    width : 20vw;
+#numPosteTd {
+    font-weight: bold;
+    width: 3vw;
     text-align: center;
 }
 
-#numPosteTd{
-    width : 10vw;
+.mainTable tr td:nth-child(2){
     text-align: center;
 }
 
-#nomPosteTd{
-    width : 30vw;
+#nomPosteTd {
+    font-weight: bold;
+    width: 25vw;
     text-align: center;
 }
 
-#formationPosteTd{
-    width : 12vw;
+#formationPosteTd {
+    font-weight: bold;
+    width: 8vw;
     text-align: center;
+}
+
+.formationButton{
+    background-color: rgb(0, 0, 0, 0.05);
+    border: solid whitesmoke;
+    border-radius: 20px;
+    font-family: calibri;
+    font-size: 1.5vw;
+    padding: 0.5vh 1.5vw;
+}
+
+.formationButton:hover{
+    color:whitesmoke;
+    box-shadow: 0vh 0vw 0.1vh 0.1vw whitesmoke;
+}
+
+.formationButton:active{
+    background-color: gainsboro;
 }
 
 
 /** Page Personnel */
 
-#blur{
+#blur {
     z-index: 10;
     position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
     width: 100vw;
-    background-color: rgb(0,0,0,0.5);
+    background-color: rgb(0, 0, 0, 0.5);
 }
 
-#zoneCentrale{
+#zoneCentrale {
     z-index: 1;
     position: absolute;
     display: block;
-    top:5vh;
+    top: 5vh;
     left: 5vw;
     right: 5vw;
     padding: 5vh 5vw;
@@ -199,45 +545,46 @@ header text{
     background-color: gold;
 }
 
-#mainInfos{
+#mainInfos {
     display: flex;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-weight: bold;
+    height: 30vh;
 }
 
-.hideElement{
+.hideElement {
     display: none;
 }
 
-#pictureDiv{
+#picturediv {
     display: block;
     width: 20vw;
     height: 30vh;
 }
 
-#picture{
+#picture {
     max-width: 20vw;
     max-height: 20vh;
 }
 
-#genreDiv{
+#genrediv {
     margin-top: 4vh;
     padding: 1vh 1vw;
 }
 
-#nomDiv{
+#nomDiv {
     margin-top: 4vh;
     padding: 1vh 1vw;
 }
 
-#prenomDiv{
+#prenomDiv {
     margin-top: 4vh;
     padding: 1vh 1vw;
 }
 
-#infoDiv{
+#infoDiv {
     position: absolute;
-    top : 15vh;
+    top: 15vh;
     left: 25vw;
     padding: 1vh 1vw;
     color: darkred;
@@ -245,30 +592,65 @@ header text{
     font-weight: 500;
 }
 
-#infoInput{
+#categorieDiv {
+    margin-top: 4vh;
+    padding: 1vh 2vw;
+}
+
+#numPosteDiv {
+    margin-top: 4vh;
+    padding: 1vh 2vw;
+}
+
+#numPosteInput {
+    width: 5vw;
+}
+
+#idPosteUnavaible {
+    position: absolute;
+    font-size: small;
+    margin-top: 2vh;
+}
+
+#nomPosteDiv {
+    margin-top: 4vh;
+    padding: 1vh 2vw;
+}
+
+#infoPosteDiv {
+    position: absolute;
+    top: 15vh;
+    left: 10vw;
+    padding: 1vh 1vw;
+    color: darkred;
+    font-size: medium;
+    font-weight: 500;
+}
+
+#infoInput {
     height: 8vh;
     width: 50vw;
 }
 
-#modificationButton{
+#modificationButton {
     position: absolute;
     right: 10vw;
     top: 27vh;
 }
 
-#anulerModifButton{
+#anulerModifButton {
     position: absolute;
     right: 19vw;
     top: 27vh;
 }
 
-#suppProfilButton{
+#suppProfilButton {
     position: absolute;
     right: 29vw;
     top: 27vh;
 }
 
-.popUp{
+.popUp {
     position: fixed;
     z-index: 20;
     top: 28vh;
@@ -277,35 +659,35 @@ header text{
     transform: translateX(-50%);
     text-align: center;
     background-color: gold;
-    border: 3px solid red;
+    border: 3px solid rgb(231, 0, 0);
     padding: 5vh 5vw;
 }
 
-.popUp button{
+.popUp button {
     margin: 0 1vw;
     margin-top: 3vh;
 }
 
 
-#nouvelleFormation{
+#nouvelleFormation {
     z-index: 30;
     top: 35vh;
     left: 50vw;
     width: 30vw;
 }
 
-#formationDiv{
+#formationDiv {
     width: 80vw;
 }
 
-#tableFormationsPersonne{
+#tableFormationsPersonne {
     font-size: 2vw;
     border: 2px solid black;
     border-collapse: collapse;
     table-layout: fixed;
 }
 
-#tableFormationsPersonne td{
+#tableFormationsPersonne td {
     text-align: center;
     border: 1px solid black;
     border-left: 2px solid black;
@@ -313,77 +695,97 @@ header text{
     font-size: small;
 }
 
-.topTD{
+.topTD {
     font-size: 2vw;
-    border: 2px solid black !important; 
+    border: 2px solid black !important;
     font-weight: bold;
 }
 
-#catTdPersonne{
-    width : 10vw;
+#catTdPersonne {
+    width: 10vw;
     text-align: center;
 }
 
-#numTdPersonne{
-    width : 7vw;
+#numTdPersonne {
+    width: 7vw;
     text-align: center;
 }
 
-#typeTdPersonne{
-    width : 10vw;
+#typeTdPersonne {
+    width: 10vw;
     text-align: center;
 }
 
-#nomTdPersonne{
-    width : 30vw;
+#nomTdPersonne {
+    width: 30vw;
     text-align: center;
 }
 
-#dateTdPersonne{
-    width : 12vw;
+#dateTdPersonne {
+    width: 12vw;
     text-align: center;
 }
 
-#niveauTdPersonne{
-    width : 7vw;
+#niveauTdPersonne {
+    width: 7vw;
+    text-align: center;
+}
+
+#titreTdPoste {
+    width: 7vw;
+    text-align: center;
+}
+
+#nomTdPoste {
+    width: 17vw;
+    text-align: center;
+}
+
+#prenomTdPoste {
+    width: 17vw;
+    text-align: center;
+}
+
+#niveauTdPoste {
+    width: 7vw;
     text-align: center;
 }
 
 /*Fiche compétence*/
 
-#titreFicheFormation{
+#titreFicheFormation {
     font-weight: bold;
     font-size: 5vw;
     text-align: center;
     margin-bottom: 1vh;
 }
 
-.subtitle{
+.subtitle {
     text-align: center;
-    margin-bottom: 1.5vh ;
+    margin-bottom: 1.5vh;
     margin-top: 2vh;
     font-size: 3vw;
     font-weight: 600;
 }
 
-.ligne{
+.ligne {
     padding: 1vh 0;
 }
 
-.contentSpan{
+.contentSpan {
     font-size: 3vw;
 }
 
-.editImgFiche{
+.editImgFiche {
     height: 2.8vh;
     cursor: pointer;
 }
 
-#ligneDate{
+#ligneDate {
     padding-bottom: 0.3vh;
 }
 
-#niveauFormation{
+#niveauFormation {
     position: absolute;
     padding-top: 1vh;
     left: 60vw;
@@ -393,23 +795,26 @@ header text{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 2.2vw;
 }
+
 .evaluation-formulaire table {
     border-collapse: collapse;
     margin: 3vh 0;
 }
-.evaluation-formulaire th, .evaluation-formulaire td {
+
+.evaluation-formulaire th,
+.evaluation-formulaire td {
     border: 1px solid black;
     text-align: center;
     padding: 8px;
 }
 
-.firstCol{
+.firstCol {
     text-align: left !important;
 }
 
 .evaluation-formulaire th {
     background-color: brown;
-    color: red;
+    color: rgb(231, 0, 0);
 }
 
 .evaluation-formulaire td {
@@ -433,11 +838,12 @@ header text{
 }
 
 /* Quand la case à cocher est cochée, changez le fond du label */
-.checkbox-custom:checked + .checkbox-label {
-    background-color: mediumseagreen; /* La couleur que vous voulez */
+.checkbox-custom:checked+.checkbox-label {
+    background-color: mediumseagreen;
+    /* La couleur que vous voulez */
 }
 
 
-#compAlreadyExist{
+#compAlreadyExist {
     font-size: small;
 }

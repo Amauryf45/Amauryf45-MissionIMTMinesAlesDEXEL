@@ -1,6 +1,35 @@
 const title_el = document.getElementById("title");
 title_el.innerText = api.title;
 
+
+
+
+//navBAr
+const accesPages = [document.getElementById("accesAccueil"),
+document.getElementById("accesFormation"),
+document.getElementById("accesAffectation")];
+
+accesPages.forEach((page,jndex)=>{
+	page.classList.add("hideElement");
+	document.getElementById("selectLine"+jndex).classList.remove("selectedLine");
+})
+document.getElementById("selectLine"+1).classList.add("selectedLine");
+
+
+window.addEventListener('scroll', function() {
+    let menu = document.getElementById('header');
+    let newHeight = 18 - window.scrollY/10; // Exemple de calcul, à ajuster selon besoin
+    newHeight = Math.max(newHeight, 10); // Limiter la hauteur minimale à 10px
+    menu.style.height = newHeight + 'vh';
+    document.getElementById("lineHeader").style.top = (newHeight+2)+'vh';
+    this.document.getElementById("menu").style.top = (newHeight-6.5)+'vh';
+});
+
+
+//fin navBar
+
+
+
 const divPersonnel = document.getElementById("divPersonnel");
 const divPoste = document.getElementById("divPoste");
 
@@ -8,10 +37,15 @@ const personnelButton = document.getElementById("personnelButton");
 const posteButton = document.getElementById("posteButton");
 let page = 0;
 
+personnelButton.style.backgroundColor = "lemonchiffon";
+posteButton.style.backgroundColor = "khaki";
+
 personnelButton.addEventListener("click",()=>{
     if(page==1){
         divPersonnel.classList.remove("hideElement");
         divPoste.classList.add("hideElement");
+        personnelButton.style.backgroundColor = "lemonchiffon";
+        posteButton.style.backgroundColor = "khaki";
         page = 0;
     }
 })
@@ -20,6 +54,8 @@ posteButton.addEventListener("click",()=>{
     if(page==0){
         divPoste.classList.remove("hideElement");
         divPersonnel.classList.add("hideElement");
+        posteButton.style.backgroundColor = "lemonchiffon";
+        personnelButton.style.backgroundColor = "khaki";
         page = 1;
     }
 })
@@ -62,16 +98,20 @@ async function displayEmploye(filter) {
 
         var cellFormation = row.insertCell(3);
         var formationButton = document.createElement("button");
-        formationButton.textContent = "Voir le profil";
+        formationButton.textContent = "Profil";
         formationButton.classList.add("formationButton");
         formationButton.id = "formationButton"+personne.ID_Personne;
         formationButton.addEventListener('click',()=>{
             api.openPersonnePopUp(personne);
         })
+        cellFormation.style.textAlign = "center";
         cellFormation.appendChild(formationButton);
     })
 }
 
+function closePersonnePopUp(){
+    displayEmploye(searchInputPersonnel? searchInputPersonnel.value  : "");
+}
 
 const addEmployeButton = document.getElementById("addEmployeButton");
 
@@ -126,21 +166,27 @@ async function displayPoste(filter) {
 
         var cellPersonnes = row.insertCell(3);
         var employeeButton = document.createElement("button");
-        employeeButton.textContent = "Voir le poste";
+        employeeButton.textContent = "Poste";
         employeeButton.classList.add("formationButton");
         employeeButton.id = "employeeButton"+poste.ID_Poste;
         employeeButton.addEventListener('click',()=>{
-            api.openPostePopUp(poste); //ici
+            api.openPostePopUp(poste); 
         })
+        cellPersonnes.style.textAlign = "center";
         cellPersonnes.appendChild(employeeButton);
     })
 }
 
 
+function closePostePopUp(){
+    displayPoste(searchInputPoste ? searchInputPoste.value  : "");
+}
+
 const addPosteButton = document.getElementById("addPosteButton");
 
 addPosteButton.addEventListener("click", async ()=>{
     newID = (+((await api.getAllPostes('')).listeEmployee.pop().ID_Personne)) + 1; //convert to number the last id given and add 1
-    newPoste = {ID_Poste: newID, NomPoste: 'Nom du Poste', Categorie: 'Catégorie'};
+    newPoste = {ID_Poste: newID, NomPoste: 'Nom du Poste', Categorie: 'Catégorie', InfoPoste : ""};
     api.openPostePopUp(newPoste);
 })
+

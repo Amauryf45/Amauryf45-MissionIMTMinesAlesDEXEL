@@ -10,10 +10,52 @@
 </head>
 
 <body>
-    <header>
-        <img id="logoheader" onClick="window.location.href='../accueil.html'" src="../data/images/logo_dexel.png" alt="logo_dexel">
-        <text>Formation Personnel</text>
-    </header>   
+    <header id="header">
+        <img id="logoheader" onClick="window.location.href='../accueil.html'" src="../data/images/logo_dexel.png"
+            alt="logo_dexel">
+        <ul id="menu">
+            <li id="accesAccueil">
+                <topMenu onClick="window.location.href='../accueil.html?page=0'" >Accueil</topMenu>
+                <hoverLine></hoverLine>
+                <div id="selectLine0"></div>
+            </li>
+            <li id="accesFormation"> 
+                <topMenu onClick="window.location.href='../accueil.html?page=1'">Formation personnel</topMenu>
+                <div id="selectLine1" class="selectedLine"></div>
+                <hoverLine></hoverLine>
+                <ul>
+                    <li>
+                        <underMenu>Administratif</underMenu>
+                    </li>
+                    <li>
+                        <underMenu>Logistique</underMenu>
+                    </li>
+                    <li>
+                        <underMenu>Laboratoire</underMenu>
+                    </li>
+                    <li>
+                        <underMenu onClick="window.location.href='production.html'">Production</underMenu>
+                    </li>
+                </ul>
+            </li>
+            <li id="accesAffectation">
+                <topMenu onClick="window.location.href='../accueil.html?page=2'">Affectation postes</topMenu>
+                <hoverLine></hoverLine>
+                <div id="selectLine2"></div>
+                <ul>
+                    <li>
+                        <underMenu>Production </underMenu>
+                    </li>
+                    <li>
+                        <underMenu>Autre </underMenu>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </header>
+    <lineHeader id="lineHeader"></lineHeader>
+
+    <div id="separateur"></div>
 
     <table id="tableHaute">
         <tr>
@@ -27,14 +69,21 @@
     </table>
 
     <div id="divPersonnel" class="mainDiv">
-        <label>Rechercher : </label> <input id="searchInputPersonnel" class="searchInput" type="search">
+        <!-- <label>Rechercher : </label> <input id="searchInputPersonnel" class="searchInput" type="search"> -->
 
-        <button id="addEmployeButton">Ajouter</button>
+        <div class="search-container">
+            <input type="search" id="searchInputPersonnel" class="searchInput" placeholder="Rechercher">
+            <button type="submit">
+              <span class="search-icon"><img src="../data/images/loupe.png" alt="loupe"></span>
+            </button>
+          </div>
+
+        <button id="addEmployeButton" class="addBtn">Ajouter</button>
 
         <table id="tablePersonnel" class="mainTable">
             <tr>
                 <td>
-                    <div id="titreTd"> Mr/Mme </div>
+                    <div id="titreTd"> Titre </div>
                 </td>
                 <td>
                     <div id="nomTd"> Nom </div>
@@ -50,9 +99,15 @@
     </div>
 
     <div id="divPoste" class="mainDiv hideElement">
-        <label>Rechercher : </label> <input id="searchInputPoste" class="searchInput" type="search">
 
-        <button id="addPosteButton">Ajouter</button>
+        <div class="search-container">
+            <input type="search" id="searchInputPersonnel" class="searchInput" placeholder="Rechercher">
+            <button type="submit">
+              <span class="search-icon"><img src="../data/images/loupe.png" alt="loupe"></span>
+            </button>
+          </div>
+
+        <button class="addBtn" id="addPosteButton">Ajouter</button>
 
         <table id="tablePoste" class="mainTable">
             <tr>
@@ -60,7 +115,7 @@
                     <div id="categorieTd"> Catégorie </div>
                 </td>
                 <td>
-                    <div id="numPosteTd"> Numéro </div>
+                    <div id="numPosteTd"> N° </div>
                 </td>
                 <td>
                     <div id="nomPosteTd"> Nom </div>
