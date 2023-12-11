@@ -489,13 +489,15 @@ document.getElementById("annulerNouvelleCompetenceButton").addEventListener("cli
     blur.classList.add("hideElement");
 })
 
+let checkboxCompetenceUnique = document.getElementById("checkboxCompetenceUnique");
 document.getElementById("creerNouvelleCompetenceButton").addEventListener("click", async () => {
-    let unique = checkboxCompetenceUnique.value ? "1" : "0";
-    let newCompetence = await api.createCompetence(inputCompetence.value, unique);
-    let newIdPoste = checkboxCompetenceUnique.value ? "0" : currentPosteDisplayedID; //peut importe le poste si competence unique => poste "0"
+    let unique = checkboxCompetenceUnique.checked ? "1" : "0";
+    let newCompetence = (await api.createCompetence(inputCompetence.value, unique)).newCompetence;
+    let newIdPoste = checkboxCompetenceUnique.checked ? "0" : currentPosteDisplayedID; //peut importe le poste si competence unique => poste "0"
     let newPersComp = { ID_PersonneCompetence: "-1", ID_Personne: personne.ID_Personne, ID_Competence: newCompetence.ID_Competence, ID_Poste: newIdPoste, Formation: "0", Niveau: "non-ev" }
-    api.updatePersonneCompetence(newPersComp);
-    api.addCompToForm(newCompetence.ID_Competence, currentPersonneFormationDisplayedID.ID_Formation)
+    await api.updatePersonneCompetence(newPersComp);
+    const formationPersonnesDetails = (await api.getFormationsPersonne(personne.ID_Personne)).listeFormations.find(formPers => formPers.ID_PersonneFormation == currentPersonneFormationDisplayedID);
+    await api.addCompToForm(newCompetence.ID_Competence, formationPersonnesDetails.ID_Formation)
     nouvelleCompetence.classList.add("hideElement");
     creerCompetence.classList.add("hideElement")
     blur.classList.add("hideElement");

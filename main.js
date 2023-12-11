@@ -728,8 +728,6 @@ function removeFormationPersonne(formationID, personneID) {
 function readAndSearchExcel() {
     console.log("try read excel");
 
-    let file = path.join(__dirname, "data/dataFormation.xlsx");
-
     // Lire le fichier Excel
     var buffer = fs.readFileSync(file);
     var workbook = XLSX.read(buffer, { type: 'buffer' });
