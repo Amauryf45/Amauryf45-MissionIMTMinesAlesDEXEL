@@ -471,10 +471,12 @@ function removePoste(posteID) {
     let buffer = fs.readFileSync(file);
     let workbook = XLSX.read(buffer, { type: 'buffer' });
 
+    console.log("remove poste : "+posteID)
+
     let sheetPoste = XLSX.utils.sheet_to_json(workbook.Sheets['Postes']);
 
     // Supprimer l'employé
-    sheetPoste = sheetPoste.filter(poste => poste.ID_Personne != posteID);
+    sheetPoste = sheetPoste.filter(poste => poste.ID_Poste != posteID);
 
     // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
     let newSheet = XLSX.utils.json_to_sheet(sheetPoste);

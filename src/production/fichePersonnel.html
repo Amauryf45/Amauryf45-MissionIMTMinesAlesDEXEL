@@ -49,7 +49,7 @@
         <select name="typeDeFormation" id="typeDeNewFormation"></select>
         <button id="quelleFormationValider"> Valider </button>
         <button id="quelleFormationAnnuler"> Annuler </button>
-        <div class="popUpText"> Temporaire, date formation ancienne formation : </div>
+        <div class="popUpText"> Date de formation : </div>
         <input type="date" name="dateFormation" id="dateAncienneFormation">
     </div>
     <div class="popUp hideElement" id="nouvelleFormation">
@@ -82,15 +82,15 @@
                     <input id="prenomInput" class="editInput hideElement" type="text">
                 </div>
                 <div id="infoDiv">
-                    <text id="info" class="infoElement"> Informations complémentaires</text>
+                    <text id="info" class="infoElement"> Informations complémentaires Je suis une Je suis une Je suis une Je suis une Je suis une Je suis une Je suis une Je suis une Je suis une Je suis une </text>
                     <textarea name="infoArea" id="infoInput" class="editInput hideElement" cols="30"
                         rows="3"></textarea>
                 </div>
-                <button id="suppProfilButton" class="editInput hideElement">Supprimer le profil</button>
-                <button id="anulerModifButton" class="editInput hideElement">Annuler</button>
-                <button id="modificationButton">Modifier le profil</button>
+                <button id="suppProfilButton" class="editInput btnFiche hideElement">Supprimer le profil</button>
+                <button id="anulerModifButton" style="top: 32vh" class="editInput btnFiche hideElement">Annuler</button>
+                <button id="modificationButton" style="top: 32vh" class="btnFiche">Modifier le profil</button>
             </div>
-            <button id="newFormationButton">Ajouter</button>
+            <button class="btnFiche" id="newFormationButton">Ajouter</button>
             <div id="formationDiv">
                 <table id="tableFormationsPersonne">
                     <tr>
@@ -112,6 +112,9 @@
                         <td class="topTD">
                             <div id="niveauTdPersonne"> Niveau </div>
                         </td>
+                        <td class="topTD">
+                            <div id="ficheTdPersonne"> Fiche </div>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -121,8 +124,8 @@
             <div class="evaluation-formulaire">
                 <div class="section">
                     <div id="titreFicheFormation">FICHE DE FORMATION</div>
-                    <div class="contentSpan subtitle">
-                        <span id="infoPosteFiche">Poste 1 - Nom du poste - TypeFormation</span>
+                    <div class="contentSpan subtitle" style="margin-bottom: 3.5vh;">
+                        <span id="infoPosteFiche" class="subtitle" >Poste 1 - Nom du poste - TypeFormation</span>
 
                     </div>
                     <div class="ligne">Nom, prénom de l’évalué:
@@ -152,14 +155,13 @@
                 </div>
 
                 <div class="section">
-                    <div class="subtitle">Critères d'évaluation</div>
                     <!-- Répétez cette structure pour chaque critère d'évaluation -->
                     <table id="tableFormationFiche">
                         <tr>
-                            <th class="firstCol" style="width: 35vw;">Compétence</th>
-                            <th style="width: 8vw;">Validation Formateur</th>
-                            <th style="width: 10vw;">Date formation</th>
-                            <th style="width: 12vw;">Validation Évaluateur</th>
+                            <td class="firstCol" style="width: 35vw;">Compétence</td>
+                            <td style="width: 8vw;">Validation Formateur</td>
+                            <td style="width: 10vw;">Date formation</td>
+                            <td style="width: 12vw;">Validation Évaluateur</td>
                         </tr>
                         <tr>
                             <td class="firstCol">Nom de la compétence</td>
@@ -180,8 +182,8 @@
                         </tr>
                         <!-- Répétez les lignes <tr> pour chaque compétence -->
                     </table>
-                    <button id="addCompButton">Ajouter une compétence</button>
-                    <button id="competencesOrderButton"> Modifier </button>
+                    <button id="competencesOrderButton" class="btnFiche"> Modifier </button>
+                    <button id="addCompButton" class="btnFiche">Ajouter une compétence</button>
                 </div>
 
                 <div class="section">
@@ -206,8 +208,9 @@
                     <textarea id="commentaireInputFormation" style="margin-bottom: 2vh; width: 55vw;"
                         name="commentaires" rows="4" cols="50"></textarea>
                 </div>
-                <button id="annulerFicheButton">Anuler</button> <button id="sauvegarderFicheButton">Sauvegarder</button>
-                <button id="suppFicheButton"> Supprimer la fiche</button>
+                <button id="annulerFicheButton" class="btnFiche">Annuler</button> 
+                <button id="sauvegarderFicheButton" class="btnFiche">Sauvegarder</button>
+                <button id="suppFicheButton" class="btnFiche"> Supprimer la fiche</button>
             </div>
         </div>
     </div>

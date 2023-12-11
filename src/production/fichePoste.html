@@ -49,7 +49,7 @@
         <select name="typeDeFormation" id="typeDeNewFormation"></select>
         <button id="quelleFormationValider"> Valider </button>
         <button id="quelleFormationAnnuler"> Annuler </button>
-        <div class="popUpText"> Temporaire, date formation ancienne formation : </div>
+        <div class="popUpText"> Date de formation : </div>
         <input type="date" name="dateFormation" id="dateAncienneFormation">
     </div>
     <div class="popUp hideElement" id="nouvelleFormation">
@@ -81,12 +81,12 @@
                     <textarea name="infoArea" id="infoInput" class="editInput hideElement" cols="30"
                         rows="3"></textarea>
                 </div>
-                <button id="suppProfilButton" class="editInput hideElement">Supprimer le profil</button>
-                <button id="anulerModifButton" class="editInput hideElement">Annuler</button>
-                <button id="modificationButton">Modifier le poste</button>
+                <button id="suppPosteButton" class="editInput hideElement btnFiche">Supprimer le poste</button>
+                <button id="anulerModifButton" class="editInput hideElement btnFiche">Annuler</button>
+                <button id="modificationButton" class="btnFiche">Modifier le poste</button>
             </div>
             <div id="formationDiv">
-                <table id="tableFormationsPersonne">
+                <table id="tableFormationsPoste">
                     <tr>
                         <td class="topTD">
                             <div id="titreTdPoste"> Titre </div>
@@ -99,6 +99,9 @@
                         </td>
                         <td class="topTD">
                             <div id="niveauTdPoste"> Niveau </div>
+                        </td>
+                        <td class="topTD">
+                            <div id="posteTdPoste"> Fiche </div>
                         </td>
                     </tr>
                 </table>
@@ -144,10 +147,10 @@
                     <!-- Répétez cette structure pour chaque critère d'évaluation -->
                     <table id="tableFormationFiche">
                         <tr>
-                            <th class="firstCol" style="width: 35vw;">Compétence</th>
-                            <th style="width: 8vw;">Validation Formateur</th>
-                            <th style="width: 10vw;">Date formation</th>
-                            <th style="width: 12vw;">Validation Évaluateur</th>
+                            <td class="firstCol" style="width: 35vw;">Compétence</td>
+                            <td style="width: 8vw;">Validation Formateur</td>
+                            <td style="width: 10vw;">Date formation</td>
+                            <td style="width: 12vw;">Validation Évaluateur</td>
                         </tr>
                         <tr>
                             <td class="firstCol">Nom de la compétence</td>

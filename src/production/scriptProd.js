@@ -185,7 +185,7 @@ function closePostePopUp(){
 const addPosteButton = document.getElementById("addPosteButton");
 
 addPosteButton.addEventListener("click", async ()=>{
-    newID = (+((await api.getAllPostes('')).listeEmployee.pop().ID_Personne)) + 1; //convert to number the last id given and add 1
+    newID = (+((await api.getAllPostes('')).allPostes.pop().ID_Poste)) + 1; //convert to number the last id given and add 1
     newPoste = {ID_Poste: newID, NomPoste: 'Nom du Poste', Categorie: 'Catégorie', InfoPoste : ""};
     api.openPostePopUp(newPoste);
 })

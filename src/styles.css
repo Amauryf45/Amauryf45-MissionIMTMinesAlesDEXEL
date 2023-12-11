@@ -532,23 +532,27 @@ sloganText {
     background-color: rgb(0, 0, 0, 0.5);
 }
 
+
 #zoneCentrale {
     z-index: 1;
     position: absolute;
     display: block;
-    top: 5vh;
-    left: 5vw;
-    right: 5vw;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: fit-content;
+    min-height: 100%;
     padding: 5vh 5vw;
     padding-bottom: 10vh;
     margin-bottom: 10vh;
-    background-color: gold;
+    background-color: khaki;
 }
 
 #mainInfos {
     display: flex;
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    font-weight: bold;
+    font-family: calibri;
+    color: #2c2b2b;
+    font-size: 5vw;
     height: 30vh;
 }
 
@@ -557,48 +561,57 @@ sloganText {
 }
 
 #picturediv {
+    position: absolute;
     display: block;
     width: 20vw;
     height: 30vh;
 }
 
 #picture {
-    max-width: 20vw;
-    max-height: 20vh;
+    border-radius: 100%;
+    max-width: 30vw;
+    max-height: 30vh;
+    
 }
 
-#genrediv {
-    margin-top: 4vh;
+#pictureInput{
+    position: absolute;
+    top : 15vh;
+    left: 8vw;
+    font-size: 1.5vw;
+}
+
+#genreDiv {
+    margin-top: 3vh;
     padding: 1vh 1vw;
+    padding-left: 4vw;
 }
 
 #nomDiv {
-    margin-top: 4vh;
+    margin-top: 3vh;
     padding: 1vh 1vw;
 }
 
 #prenomDiv {
-    margin-top: 4vh;
+    margin-top: 3vh;
     padding: 1vh 1vw;
 }
 
 #infoDiv {
     position: absolute;
-    top: 15vh;
-    left: 25vw;
+    width: 62vw;
+    top: 17vh;
+    left: 29vw;
     padding: 1vh 1vw;
-    color: darkred;
-    font-size: medium;
+    font-size: 2.5vw;
     font-weight: 500;
 }
 
 #categorieDiv {
-    margin-top: 4vh;
     padding: 1vh 2vw;
 }
 
 #numPosteDiv {
-    margin-top: 4vh;
     padding: 1vh 2vw;
 }
 
@@ -613,7 +626,6 @@ sloganText {
 }
 
 #nomPosteDiv {
-    margin-top: 4vh;
     padding: 1vh 2vw;
 }
 
@@ -632,22 +644,47 @@ sloganText {
     width: 50vw;
 }
 
+
+.btnFiche {
+    background-color: lightgrey;
+    border: solid whitesmoke;
+    border-radius: 20px;
+    font-family: calibri;
+    font-size: 2.3vw;
+    padding: 1vh 2vw;
+}
+
+.btnFiche:hover{
+    color:whitesmoke;
+    box-shadow: 0vh 0vw 0.1vh 0.1vw whitesmoke;
+}
+
+.btnFiche:active{
+    background-color: gainsboro;
+}
+
 #modificationButton {
     position: absolute;
-    right: 10vw;
-    top: 27vh;
+    right: 8.5vw;
+    top: 28vh;
 }
 
 #anulerModifButton {
     position: absolute;
-    right: 19vw;
-    top: 27vh;
+    right: 21vw;
+    top: 28vh;
+}
+
+#suppPosteButton{
+    position: absolute;
+    right: 34.5vw;
+    top: 28vh;
 }
 
 #suppProfilButton {
     position: absolute;
-    right: 29vw;
-    top: 27vh;
+    right: 34.5vw;
+    top: 32vh;
 }
 
 .popUp {
@@ -658,8 +695,9 @@ sloganText {
     width: 40vw;
     transform: translateX(-50%);
     text-align: center;
-    background-color: gold;
-    border: 3px solid rgb(231, 0, 0);
+    background-color: khaki;    
+    color: #2c2b2b;
+    border: 3px solid whitesmoke;
     padding: 5vh 5vw;
 }
 
@@ -669,36 +707,115 @@ sloganText {
 }
 
 
-#nouvelleFormation {
-    z-index: 30;
-    top: 35vh;
-    left: 50vw;
-    width: 30vw;
+#newFormationButton {
+    margin: 4vh 0 0 4vw;
+    width: 20vw;
 }
 
 #formationDiv {
-    width: 80vw;
+    color: #2c2b2b;
 }
 
 #tableFormationsPersonne {
+    margin-top: 0;
+    border: 1px solid whitesmoke;
+    border-collapse: separate;
+    border-spacing: 0;
+    /* Assurez-vous qu'il n'y a pas d'espace entre les cellules */
+    table-layout: fixed;
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: calibri;
+    font-size: 1.6vw;
+    margin: 5vh auto;
+    background-color: rgb(0, 0, 0, 0.05);
+
+}
+
+
+/* Appliquer des bordures uniquement sur les bords extérieurs de la table et des cellules aux extrémités */
+#tableFormationsPersonne tr:first-child td:first-child {
+    border-top: 2px solid whitesmoke;
+    border-left: 2px solid whitesmoke;
+    border-top-left-radius: 10px;
+}
+
+#tableFormationsPersonne tr:first-child td:last-child {
+    border-top: 2px solid whitesmoke;
+    border-right: 2px solid whitesmoke;
+    border-top-right-radius: 10px;
+}
+
+#tableFormationsPersonne tr:last-child td:first-child {
+    border-bottom: 2px solid whitesmoke;
+    border-left: 2px solid whitesmoke;
+    border-bottom-left-radius: 10px;
+}
+
+#tableFormationsPersonne tr:last-child td:last-child {
+    border-bottom: 2px solid whitesmoke;
+    border-right: 2px solid whitesmoke;
+    border-bottom-right-radius: 10px;
+}
+
+#tableFormationsPersonne tr:first-child td {
+    border-top: 2px solid whitesmoke;
+    border-bottom: 2px solid whitesmoke;
+}
+
+#tableFormationsPersonne tr:last-child td {
+    border-bottom: 2px solid whitesmoke;
+}
+
+#tableFormationsPersonne tr td:first-child {
+    border-left: 2px solid whitesmoke;
+}
+
+#tableFormationsPersonne tr td:last-child {
+    border-right: 2px solid whitesmoke;
+}
+
+#tableFormationsPersonne tr td:nth-child(2) {
+    text-align: center;
+}
+
+#tableFormationsPersonne tr td:nth-child(5) {
+    text-align: center;
+}
+
+#tableFormationsPersonne tr td:nth-child(6) {
+    text-align: center;
+}
+
+/* Supprimer les bordures internes */
+#tableFormationsPersonne tr td {
+    border: 1.5px solid whitesmoke;
+}
+
+#tableFormationsPersonne td {
+    border: 2px solid whitesmoke;
+    padding: 1vh 1vw;
+}
+
+/* #tableFormationsPersonne {
     font-size: 2vw;
     border: 2px solid black;
     border-collapse: collapse;
     table-layout: fixed;
-}
+} */
 
-#tableFormationsPersonne td {
+/* #tableFormationsPersonne td {
     text-align: center;
     border: 1px solid black;
     border-left: 2px solid black;
     padding: 1vh 0;
     font-size: small;
 }
-
+ */
 .topTD {
     font-size: 2vw;
-    border: 2px solid black !important;
     font-weight: bold;
+    text-align: center;
 }
 
 #catTdPersonne {
@@ -707,27 +824,27 @@ sloganText {
 }
 
 #numTdPersonne {
-    width: 7vw;
+    width: 5vw;
     text-align: center;
 }
 
 #typeTdPersonne {
-    width: 10vw;
+    width: 9vw;
     text-align: center;
 }
 
 #nomTdPersonne {
-    width: 30vw;
+    width: 25vw;
     text-align: center;
 }
 
 #dateTdPersonne {
-    width: 12vw;
+    width: 8vw;
     text-align: center;
 }
 
 #niveauTdPersonne {
-    width: 7vw;
+    width: 6vw;
     text-align: center;
 }
 
@@ -751,7 +868,106 @@ sloganText {
     text-align: center;
 }
 
+.competenceButton {
+    background-color: lightgrey;
+    border: solid 0.2vw whitesmoke;
+    height: 5vh;
+    width: 7vw;
+    border-radius: 10px;
+    font-family: calibri;
+    font-size: 1.5vw;
+}
+
+.competenceButton:hover{
+    color:whitesmoke;
+    box-shadow: 0vh 0vw 0.05vh 0.05vw whitesmoke;
+}
+
+.competenceButton:active{
+    background-color: gainsboro;
+}
+
+
+
+#tableFormationsPoste {
+    margin-top: 0;
+    border: 1px solid whitesmoke;
+    border-collapse: separate;
+    border-spacing: 0;
+    /* Assurez-vous qu'il n'y a pas d'espace entre les cellules */
+    table-layout: fixed;
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: calibri;
+    font-size: 1.6vw;
+    margin: 5vh auto;
+    background-color: rgb(0, 0, 0, 0.05);
+
+}
+
+
+/* Appliquer des bordures uniquement sur les bords extérieurs de la table et des cellules aux extrémités */
+#tableFormationsPoste tr:first-child td:first-child {
+    border-top: 2px solid whitesmoke;
+    border-left: 2px solid whitesmoke;
+    border-top-left-radius: 10px;
+}
+
+#tableFormationsPoste tr:first-child td:last-child {
+    border-top: 2px solid whitesmoke;
+    border-right: 2px solid whitesmoke;
+    border-top-right-radius: 10px;
+}
+
+#tableFormationsPoste tr:last-child td:first-child {
+    border-bottom: 2px solid whitesmoke;
+    border-left: 2px solid whitesmoke;
+    border-bottom-left-radius: 10px;
+}
+
+#tableFormationsPoste tr:last-child td:last-child {
+    border-bottom: 2px solid whitesmoke;
+    border-right: 2px solid whitesmoke;
+    border-bottom-right-radius: 10px;
+}
+
+#tableFormationsPoste tr:first-child td {
+    border-top: 2px solid whitesmoke;
+    border-bottom: 2px solid whitesmoke;
+}
+
+#tableFormationsPoste tr:last-child td {
+    border-bottom: 2px solid whitesmoke;
+}
+
+#tableFormationsPoste tr td:first-child {
+    border-left: 2px solid whitesmoke;
+}
+
+#tableFormationsPoste tr td:last-child {
+    border-right: 2px solid whitesmoke;
+}
+
+#tableFormationsPoste tr td:nth-child(4) {
+    text-align: center;
+}
+
+/* Supprimer les bordures internes */
+#tableFormationsPoste tr td {
+    border: 1.5px solid whitesmoke;
+}
+
+#tableFormationsPoste td {
+    border: 2px solid whitesmoke;
+    padding: 1vh 1vw;
+}
+
+
 /*Fiche compétence*/
+
+#ficheFormation{
+    color: #2c2b2b;
+}
 
 #titreFicheFormation {
     font-weight: bold;
@@ -765,7 +981,7 @@ sloganText {
     margin-bottom: 1.5vh;
     margin-top: 2vh;
     font-size: 3vw;
-    font-weight: 600;
+    font-weight: bold;
 }
 
 .ligne {
@@ -773,7 +989,7 @@ sloganText {
 }
 
 .contentSpan {
-    font-size: 3vw;
+    font-weight: initial;
 }
 
 .editImgFiche {
@@ -792,11 +1008,12 @@ sloganText {
 }
 
 .evaluation-formulaire {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: 2.2vw;
+    font-family: Calibri;
+    font-size: 2.5vw;
+    font-weight: bold;
 }
 
-.evaluation-formulaire table {
+/* .evaluation-formulaire table {
     border-collapse: collapse;
     margin: 3vh 0;
 }
@@ -819,6 +1036,81 @@ sloganText {
 
 .evaluation-formulaire td {
     background-color: bisque;
+} */
+
+
+#tableFormationFiche {
+    margin-top: 0;
+    border: 1px solid whitesmoke;
+    border-collapse: separate;
+    border-spacing: 0;
+    /* Assurez-vous qu'il n'y a pas d'espace entre les cellules */
+    table-layout: fixed;
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: calibri;
+    font-weight: normal;
+    margin: 2vh auto;
+    background-color: rgb(0, 0, 0, 0.05);
+
+}
+
+
+/* Appliquer des bordures uniquement sur les bords extérieurs de la table et des cellules aux extrémités */
+#tableFormationFiche tr:first-child td:first-child {
+    border-top: 2px solid whitesmoke;
+    border-left: 2px solid whitesmoke;
+    border-top-left-radius: 10px;
+}
+
+#tableFormationFiche tr:first-child td:last-child {
+    border-top: 2px solid whitesmoke;
+    border-right: 2px solid whitesmoke;
+    border-top-right-radius: 10px;
+}
+
+#tableFormationFiche tr:last-child td:first-child {
+    border-bottom: 2px solid whitesmoke;
+    border-left: 2px solid whitesmoke;
+    border-bottom-left-radius: 10px;
+}
+
+#tableFormationFiche tr:last-child td:last-child {
+    border-bottom: 2px solid whitesmoke;
+    border-right: 2px solid whitesmoke;
+    border-bottom-right-radius: 10px;
+}
+
+#tableFormationFiche tr:first-child td {
+    border-top: 2px solid whitesmoke;
+    border-bottom: 2px solid whitesmoke;
+    font-weight: bold;
+}
+
+#tableFormationFiche tr:last-child td {
+    border-bottom: 2px solid whitesmoke;
+}
+
+#tableFormationFiche tr td:first-child {
+    border-left: 2px solid whitesmoke;
+}
+
+#tableFormationFiche tr td:last-child {
+    border-right: 2px solid whitesmoke;
+}
+
+#tableFormationFiche tr td:nth-child(2) {
+    text-align: center;
+}
+
+/* Supprimer les bordures internes */
+#tableFormationFiche tr td {
+    border: 1.5px solid whitesmoke;
+}
+
+#tableFormationFiche td {
+    border: 2px solid whitesmoke;
+    padding: 1vh 1vw;
 }
 
 
@@ -829,11 +1121,13 @@ sloganText {
 
 /* Style pour le label qui représente la case à cocher */
 .checkbox-label {
+    margin-top: 1vh;
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    background: tomato;
-    border: 2px solid #ddd;
+    width: 3.5vw;
+    height: 3.5vw;
+    background: crimson;
+    border: 0.2vw solid #ddd;
+    border-radius: 100%;
     cursor: pointer;
 }
 
@@ -843,7 +1137,44 @@ sloganText {
     /* La couleur que vous voulez */
 }
 
+.checkbox-label:hover{
+    box-shadow: 0vh 0vw 0.1vh 0.1vw whitesmoke;
+}
+
 
 #compAlreadyExist {
     font-size: small;
+}
+
+#suppFicheButton{
+    background-color: crimson;
+}
+
+#sauvegarderFicheButton{
+    background-color: mediumseagreen;
+
+}
+
+.binImg{
+    max-height: 1.5vh;
+    max-width: 3vw;
+}
+
+
+.btnLigne {
+    background-color: lightgrey;
+    border: solid 0.1vw whitesmoke;
+    border-radius: 20px;
+    font-family: calibri;
+    font-size: 1.5vw;
+    padding: 0.5vh 1vw;
+}
+
+.btnLigne:hover{
+    color:whitesmoke;
+    box-shadow: 0vh 0vw 0.1vh 0.1vw whitesmoke;
+}
+
+.btnLigne:active{
+    background-color: gainsboro;
 }

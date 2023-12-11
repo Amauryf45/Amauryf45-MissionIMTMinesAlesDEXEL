@@ -159,7 +159,7 @@ async function displayFormations(employe) {
 
         let cellCompetences = row.insertCell(6);
         let competenceButton = document.createElement("button");
-        competenceButton.textContent = "Fiche";
+        competenceButton.textContent = "Détails";
         competenceButton.classList.add("competenceButton");
         competenceButton.id = "competenceButton" + formation.ID_PersonneFormation;
         competenceButton.addEventListener('click', () => {
@@ -630,18 +630,26 @@ competencesOrderButton.addEventListener("click", () => {
         listeRowCompetence.forEach((row, index) => {
             let cellEditOrder = row.insertCell(4); // Insère une cellule de plus
             let upDownDiv = document.createElement("div");
+            // cellEditOrder.style.display = "block";
             cellEditOrder.appendChild(upDownDiv);
             upDownDiv.classList.add("upDownDiv");
             let upButton = document.createElement("button");
             upButton.textContent = "↑";
+            upButton.classList.add("btnLigne");
             upButton.addEventListener("click", () => goUpComp(index));
             upDownDiv.appendChild(upButton);
             let downButton = document.createElement("button");
             downButton.textContent = "↓";
+            downButton.classList.add("btnLigne");
             downButton.addEventListener("click", () => goDownComp(index));
             upDownDiv.appendChild(downButton);
             let delCompButton = document.createElement("button");
-            delCompButton.textContent = "supp";
+            let binImg = document.createElement("img");
+            binImg.src="../data/images/bin.png";
+            binImg.classList.add("binImg")
+            delCompButton.classList.add("btnLigne");
+            delCompButton.appendChild(binImg);
+            delCompButton.style.backgroundColor = "crimson";
             delCompButton.addEventListener("click", () => delComp(index));
             cellEditOrder.appendChild(delCompButton);
         })
