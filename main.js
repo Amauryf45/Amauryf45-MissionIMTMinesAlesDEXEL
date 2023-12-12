@@ -21,7 +21,7 @@ function createWindow() {
         }
     });
 
-    // Menu.setApplicationMenu(null);
+    Menu.setApplicationMenu(null);
 
     mainWindow.maximize();
 
@@ -318,8 +318,8 @@ function removePersonne(personneID) {
     sheetPersonnesFormations = sheetPersonnesFormations.filter(persForm => persForm.ID_Personne != personneID);
 
     // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
-    newSheet = XLSX.utils.json_to_sheet(sheetPersonnes);
-    workbook.Sheets['PersonnesFormations'] = newSheet;
+    let newSheet2 = XLSX.utils.json_to_sheet(sheetPersonnes);
+    workbook.Sheets['PersonnesFormations'] = newSheet2;
     XLSX.writeFile(workbook, file);
 
     //supprime les competences de l'empoyé 
@@ -329,8 +329,8 @@ function removePersonne(personneID) {
     sheetPersonnesCompetences = sheetPersonnesCompetences.filter(persComp => persComp.ID_Personne != personneID);
 
     // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
-    newSheet = XLSX.utils.json_to_sheet(sheetPersonnesCompetences);
-    workbook.Sheets['sheetPersonnesCompetences'] = newSheet;
+    let newSheet3 = XLSX.utils.json_to_sheet(sheetPersonnesCompetences);
+    workbook.Sheets['sheetPersonnesCompetences'] = newSheet3;
     XLSX.writeFile(workbook, file);
 
 
@@ -548,8 +548,8 @@ function removePoste(posteID) {
     sheetFormations = sheetFormations.filter(form => form.ID_Poste != posteID);
 
     // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
-    newSheet = XLSX.utils.json_to_sheet(sheetPersonnes);
-    workbook.Sheets['Formations'] = newSheet;
+    let newSheet2 = XLSX.utils.json_to_sheet(sheetPersonnes);
+    workbook.Sheets['Formations'] = newSheet2;
     XLSX.writeFile(workbook, file);
 
     //supprime les competences du poste 
@@ -559,8 +559,8 @@ function removePoste(posteID) {
     sheetPersonnesCompetences = sheetPersonnesCompetences.filter(persComp => persComp.ID_Poste != posteID);
 
     // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
-    newSheet = XLSX.utils.json_to_sheet(sheetPersonnesCompetences);
-    workbook.Sheets['sheetPersonnesCompetences'] = newSheet;
+    let newSheet3 = XLSX.utils.json_to_sheet(sheetPersonnesCompetences);
+    workbook.Sheets['sheetPersonnesCompetences'] = newSheet3;
     XLSX.writeFile(workbook, file);
 }
 
