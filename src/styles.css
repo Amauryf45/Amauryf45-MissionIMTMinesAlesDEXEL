@@ -569,9 +569,9 @@ sloganText {
 
 #picture {
     border-radius: 100%;
-    max-width: 30vw;
-    max-height: 30vh;
-    
+    width: 20vw;
+    height: 20vw;
+    object-fit: cover;
 }
 
 #pictureInput{

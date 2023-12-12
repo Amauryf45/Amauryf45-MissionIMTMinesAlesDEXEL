@@ -13,6 +13,11 @@ const nom = document.getElementById("nom");
 const prenom = document.getElementById("prenom");
 const info = document.getElementById("info");
 
+const basePath = '../data/images/profilePic';
+const extensions = ['jpg', 'png', 'gif'];
+
+
+
 //launched by Main at the launch of the window
 function updatePersData(data) {
     personne = data;
@@ -23,8 +28,20 @@ function updatePersData(data) {
 
     title_el.innerText = 'Fiche de poste - ' + data.Nom + ' ' + data.Prenom;
 
+
+    loadImageWithExtensions(basePath, ""+personne.ID_Personne, extensions, (loadedImage) => {
+        if (loadedImage) {
+            // Ajouter l'image au document
+            document.getElementById("picture").src = loadedImage.src;
+        } else {
+            console.log('Image non trouvée avec les extensions fournies.');
+        }
+    });
+
+
     displayFormations(personne);
 }
+
 
 const annulerButton = document.getElementById("anulerModifButton");
 annulerButton.addEventListener("click", () => {
@@ -96,11 +113,20 @@ editButton.addEventListener("click", () => {
                 element.innerHTML = tempInfos[index];
             }
         });
+
+        loadImageWithExtensions(basePath, ""+personne.ID_Personne, extensions, (loadedImage) => {
+            if (loadedImage) {
+                // Ajouter l'image au document
+                document.getElementById("picture").src = loadedImage.src;
+            } else {
+                console.log('Image non trouvée avec les extensions fournies.');
+            }
+        });
+        
         sendNewData();
         editButton.textContent = "Modifier le profil";
     }
 })
-
 
 function sendNewData() {
     personne.Genre = genre.innerHTML;
@@ -110,6 +136,16 @@ function sendNewData() {
     console.log(personne);
     api.updatePersonne(personne);
 }
+
+document.getElementById('pictureInput').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        window.api.saveImage(file.path, personne.ID_Personne).then((response) => {
+            console.log(response); // Traitez la réponse du processus principal.
+        });
+    }
+});
+
 
 
 //affichage des formations
@@ -136,8 +172,8 @@ async function displayFormations(employe) {
     res.listeFormations.forEach(async formation => {
         let row = tableFormation.insertRow(); // Insère une nouvelle ligne
 
-        const poste = (await api.getPosteInfo(formation.ID_Formation)).infoPoste;
         const formationDetails = (await api.getFormationInfo(formation.ID_Formation)).infoFormation;
+        const poste = (await api.getPosteInfo(formationDetails.ID_Poste)).infoPoste;
 
         let cellCategorie = row.insertCell(0); // Insère la première cellule
         cellCategorie.textContent = poste.Categorie; // Définit le texte de la cellule
@@ -342,7 +378,7 @@ async function updateFiche(PersonneFormationID) {
 
     const formationPersonnesDetails = (await api.getFormationsPersonne(personne.ID_Personne)).listeFormations.find(formPers => formPers.ID_PersonneFormation == PersonneFormationID);
     const formationDetails = (await api.getFormationInfo(formationPersonnesDetails.ID_Formation)).infoFormation;
-    const poste = (await api.getPosteInfo(formationPersonnesDetails.ID_Formation)).infoPoste;
+    const poste = (await api.getPosteInfo(formationDetails.ID_Poste)).infoPoste;
 
     currentPosteDisplayedID = poste.ID_Poste;
 
@@ -540,17 +576,17 @@ async function displayFormationsFiche(formationDetails) {
         const competenceInfos = (await api.getCompetenceInfo(competence)).infoCompetence;
         let persCompInfos = (await api.getPersonneCompetence(personne.ID_Personne, currentPosteDisplayedID, competence)).infoPersComp;
 
-        if (!persCompInfos) { 
+        if (!persCompInfos) {
             let dateForm = document.getElementById("dateAncienneFormation").value;
             console.log(dateForm)
             let isFormed = "0";
-            if(dateForm){
+            if (dateForm) {
                 isFormed = "1";
             }
             let newIdPoste = competenceInfos.Unique == "1" ? "0" : currentPosteDisplayedID; //peut importe le poste si competence unique => poste "0"
             persCompInfos = { ID_PersonneCompetence: "-1", ID_Personne: personne.ID_Personne, ID_Competence: competenceInfos.ID_Competence, ID_Poste: newIdPoste, Formation: isFormed, Niveau: "non-ev", DateControle: dateForm }
             await api.updatePersonneCompetence(persCompInfos);
-            let createdPersComp = await api.getPersonneCompetence(persCompInfos.ID_Personne,persCompInfos.ID_Poste,persCompInfos.ID_Competence)
+            let createdPersComp = await api.getPersonneCompetence(persCompInfos.ID_Personne, persCompInfos.ID_Poste, persCompInfos.ID_Competence)
             persCompInfos.ID_PersonneCompetence = createdPersComp.infoPersComp.ID_PersonneCompetence;
         }
 
@@ -645,7 +681,7 @@ competencesOrderButton.addEventListener("click", () => {
             upDownDiv.appendChild(downButton);
             let delCompButton = document.createElement("button");
             let binImg = document.createElement("img");
-            binImg.src="../data/images/bin.png";
+            binImg.src = "../data/images/bin.png";
             binImg.classList.add("binImg")
             delCompButton.classList.add("btnLigne");
             delCompButton.appendChild(binImg);
@@ -721,13 +757,13 @@ async function sauvegarderFiche() {
         }
     })
 
-    listeCompetenceValidationFormateurInput.forEach((compInput,index) => {
+    listeCompetenceValidationFormateurInput.forEach((compInput, index) => {
         if (compInput.checked) {
             // La case est cochée
             api.updateValidFormation(true, personne.ID_Personne, listeCompetenceValidationEvaluateurInput[index].thePersCompInfos.ID_Competence);
         } else {
             // La case est décochée
-            api.updateValidFormation(false, personne.ID_Personne,  listeCompetenceValidationEvaluateurInput[index].thePersCompInfos.ID_Competence);
+            api.updateValidFormation(false, personne.ID_Personne, listeCompetenceValidationEvaluateurInput[index].thePersCompInfos.ID_Competence);
         }
     })
 
@@ -805,7 +841,7 @@ inputFormation.addEventListener("focusout", () => {
 })
 
 
-let typeFormation = ["Fabricant", "Conducteur", "Conditionneur"]; //select les types de formations possible
+let typeFormation = ["Fabricant", "Conducteur", "Conditionneur","Non-renseigné"]; //select les types de formations possible
 let typeDeNewFormation = document.getElementById("typeDeNewFormation");
 typeFormation.forEach(type => {
     let option = document.createElement("option");
@@ -904,4 +940,28 @@ async function quelleFormationValider() {
 
 function contient(liste_ID, id) {
     return liste_ID.find(idInList => idInList == id)
+}
+
+
+
+function loadImageWithExtensions(basePath, filename, extensions, callback) {
+    let image = new Image();
+    let currentExtensionIndex = 0;
+
+    image.onload = () => {
+        callback(image); // L'image a été chargée avec succès
+    };
+
+    image.onerror = () => {
+        currentExtensionIndex++; // Passer à l'extension suivante
+        if (currentExtensionIndex < extensions.length) {
+            // Essayer la prochaine extension
+            image.src = `${basePath}/${filename}.${extensions[currentExtensionIndex]}`;
+        } else {
+            callback(null); // Aucune extension n'a fonctionné
+        }
+    };
+
+    // Commencer avec la première extension
+    image.src = `${basePath}/${filename}.${extensions[currentExtensionIndex]}`;
 }

@@ -15,7 +15,9 @@ function createWindow() {
         height: 720,
         width: 1080,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname, 'preload.js'),
+            nodeIntegration: false,
+            contextIsolation: true
         }
     });
 
@@ -36,7 +38,9 @@ function createWindow() {
             modal: true,
             parent: mainWindow,
             webPreferences: {
-                preload: path.join(__dirname, 'preload.js')
+                preload: path.join(__dirname, 'preload.js'),
+                nodeIntegration: false,
+                contextIsolation: true
             }
         });
         popUpWindow.loadFile(`src/production/fichePersonnel.html`).then(() => {
@@ -145,7 +149,7 @@ function createWindow() {
     })
 
 
-    ipcMain.handle("getAllPostes", (req,filter) => {
+    ipcMain.handle("getAllPostes", (req, filter) => {
         let allPostes = getAllPostes(filter);
 
         return { allPostes };
@@ -219,6 +223,31 @@ function createWindow() {
         removeFormationPersonne(formationID, personneID);
     })
 
+
+    ipcMain.handle('save-image', async (event, { imagePath, ID_personne }) => {
+        try {
+            const fileTypeModule = await import('file-type');
+            const type = await fileTypeModule.fileTypeFromFile(imagePath);
+            if (type.mime.startsWith('image/')) {
+                // Votre logique pour sauvegarder l'image
+                const newPath = path.join(__dirname, 'src/data/images/profilePic', `${ID_personne}${path.extname(imagePath)}`);
+                fs.copyFileSync(imagePath, newPath);
+                return newPath; // Ou retournez un message de succès.
+            } else {
+                return 'Not an image file';
+            }
+        } catch (error) {
+            console.error('Error saving the image:', error);
+            return 'An error occurred';
+        }
+    });
+
+    ipcMain.handle('check-file-exists', async (event, ID_Personne) => {
+        const fullPath = path.join(__dirname, 'src/data/images/profilePic', `${ID_Personne}.\\.(jpg|png|jpeg)$`);
+        return fs.existsSync(fullPath); // retourne true si le fichier existe, sinon false
+    });
+
+
     mainWindow.loadFile('src/accueil.html')
 }
 
@@ -281,6 +310,35 @@ function removePersonne(personneID) {
     let newSheet = XLSX.utils.json_to_sheet(sheetPersonnes);
     workbook.Sheets['Personnes'] = newSheet;
     XLSX.writeFile(workbook, file);
+
+    //supprime les formations de l'empoyé 
+
+    let sheetPersonnesFormations = XLSX.utils.sheet_to_json(workbook.Sheets['PersonnesFormations']);
+
+    sheetPersonnesFormations = sheetPersonnesFormations.filter(persForm => persForm.ID_Personne != personneID);
+
+    // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
+    newSheet = XLSX.utils.json_to_sheet(sheetPersonnes);
+    workbook.Sheets['PersonnesFormations'] = newSheet;
+    XLSX.writeFile(workbook, file);
+
+    //supprime les competences de l'empoyé 
+
+    let sheetPersonnesCompetences = XLSX.utils.sheet_to_json(workbook.Sheets['PersonnesCompetences']);
+
+    sheetPersonnesCompetences = sheetPersonnesCompetences.filter(persComp => persComp.ID_Personne != personneID);
+
+    // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
+    newSheet = XLSX.utils.json_to_sheet(sheetPersonnesCompetences);
+    workbook.Sheets['sheetPersonnesCompetences'] = newSheet;
+    XLSX.writeFile(workbook, file);
+
+
+
+    //supprimer photo
+    const directoryPath = 'src/data/images/profilePic';
+    deleteFileByName(directoryPath, personneID);
+
 }
 
 function getPersonneInfo(personneID) {
@@ -382,20 +440,20 @@ function updateFormationCompOrder(formationID, index, upOrDown) {
 
     if (formationIndex !== -1) {
         let listeCompetence = sheetFormations[formationIndex].Competences.split(";");
-        if (upOrDown=="up") {
+        if (upOrDown == "up") {
             let temp = listeCompetence[index]
             listeCompetence[index] = listeCompetence[index - 1];
             listeCompetence[index - 1] = temp;
         }
-        else if(upOrDown == "down") {
+        else if (upOrDown == "down") {
             let temp = listeCompetence[index]
             listeCompetence[index] = listeCompetence[index + 1];
             listeCompetence[index + 1] = temp;
         }
-        else if (upOrDown == "supp"){
-            listeCompetence.splice(index,1);
+        else if (upOrDown == "supp") {
+            listeCompetence.splice(index, 1);
         }
-        else{
+        else {
             console.log("this case cannot happen")
         }
 
@@ -471,16 +529,38 @@ function removePoste(posteID) {
     let buffer = fs.readFileSync(file);
     let workbook = XLSX.read(buffer, { type: 'buffer' });
 
-    console.log("remove poste : "+posteID)
+    console.log("remove poste : " + posteID)
 
     let sheetPoste = XLSX.utils.sheet_to_json(workbook.Sheets['Postes']);
 
-    // Supprimer l'employé
+    // Supprimer le poste
     sheetPoste = sheetPoste.filter(poste => poste.ID_Poste != posteID);
 
     // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
     let newSheet = XLSX.utils.json_to_sheet(sheetPoste);
     workbook.Sheets['Postes'] = newSheet;
+    XLSX.writeFile(workbook, file);
+
+    //supprime les formations associé au poste
+
+    let sheetFormations = XLSX.utils.sheet_to_json(workbook.Sheets['Formations']);
+
+    sheetFormations = sheetFormations.filter(form => form.ID_Poste != posteID);
+
+    // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
+    newSheet = XLSX.utils.json_to_sheet(sheetPersonnes);
+    workbook.Sheets['Formations'] = newSheet;
+    XLSX.writeFile(workbook, file);
+
+    //supprime les competences du poste 
+
+    let sheetPersonnesCompetences = XLSX.utils.sheet_to_json(workbook.Sheets['PersonnesCompetences']);
+
+    sheetPersonnesCompetences = sheetPersonnesCompetences.filter(persComp => persComp.ID_Poste != posteID);
+
+    // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
+    newSheet = XLSX.utils.json_to_sheet(sheetPersonnesCompetences);
+    workbook.Sheets['sheetPersonnesCompetences'] = newSheet;
     XLSX.writeFile(workbook, file);
 }
 
@@ -498,7 +578,7 @@ function updatePoste(poste) {
     // Trouver et mettre à jour l'employé
     let foundIndex = sheetPoste.findIndex(p => p.ID_Poste == poste.ID_Poste);
     if (foundIndex !== -1) {
-        console.log("find index : "+foundIndex)
+        console.log("find index : " + foundIndex)
         sheetPoste[foundIndex] = { ...sheetPoste[foundIndex], ...poste };
     }
     else {
@@ -528,6 +608,8 @@ function getAllPostes(filter) {
 }
 
 function getPosteInfo(posteID) {
+
+    console.log('posteID : ' + posteID)
 
     // Lire le fichier Excel
     let buffer = fs.readFileSync(file);
@@ -617,9 +699,9 @@ function updatePersonneCompetence(compInfo) {
 
     // Extraire les données des feuilles
     let sheetPersonnesCompetences = XLSX.utils.sheet_to_json(workbook.Sheets['PersonnesCompetences']);
-    console.log("id : "+ compInfo.ID_PersonneCompetence)
+    console.log("id : " + compInfo.ID_PersonneCompetence)
     let foundIndex = sheetPersonnesCompetences.findIndex(comp => compInfo.ID_PersonneCompetence == comp.ID_PersonneCompetence);
-    
+
     if (foundIndex !== -1) {
         console.log("pas création nouvelle personne competences")
 
@@ -628,9 +710,9 @@ function updatePersonneCompetence(compInfo) {
     else {
         console.log("création nouvelle personne competences")
         let newID = (+(sheetPersonnesCompetences.at(-1).ID_PersonneCompetence) + 1);
-        console.log("newID : "+newID)
+        console.log("newID : " + newID)
         compInfo.ID_PersonneCompetence = "" + newID;
-        sheetPersonnesCompetences[newID+1] = { ...sheetPersonnesCompetences[newID+1], ...compInfo };
+        sheetPersonnesCompetences[newID + 1] = { ...sheetPersonnesCompetences[newID + 1], ...compInfo };
     }
 
     // Convertir les données JSON en feuille de calcul et les écrire dans le fichier
@@ -649,7 +731,7 @@ function getPersonneCompetence(personneID, posteID, competenceID) {
     // Extraire les données des feuilles
     let sheetPersonnesCompetences = XLSX.utils.sheet_to_json(workbook.Sheets['PersonnesCompetences']);
 
-    let persCompInfos = sheetPersonnesCompetences.find(persComp => (competenceID==persComp.ID_Competence && (posteID == persComp.ID_Poste || "0"==persComp.ID_Poste) && personneID == persComp.ID_Personne));
+    let persCompInfos = sheetPersonnesCompetences.find(persComp => (competenceID == persComp.ID_Competence && (posteID == persComp.ID_Poste || "0" == persComp.ID_Poste) && personneID == persComp.ID_Personne));
 
     return persCompInfos
 }
@@ -767,4 +849,28 @@ function comparerChaines(chaine1, chaine2) {
 
     // Comparer les chaînes converties
     return chaine2Min.includes(chaine1Min);
+}
+
+
+
+function deleteFileByName(directory, baseName) {
+    fs.readdir(directory, (err, files) => {
+        if (err) {
+            console.error('Erreur lors de la lecture du répertoire:', err);
+            return;
+        }
+
+        const fileToDelete = files.find(file => file.startsWith(baseName+'.'));
+        if (fileToDelete) {
+            fs.unlink(path.join(directory, fileToDelete), unlinkErr => {
+                if (unlinkErr) {
+                    console.error('Erreur lors de la suppression du fichier:', unlinkErr);
+                } else {
+                    console.log('Fichier supprimé:', fileToDelete);
+                }
+            });
+        } else {
+            console.log('Aucun fichier correspondant trouvé.');
+        }
+    });
 }

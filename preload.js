@@ -30,5 +30,8 @@ contextBridge.exposeInMainWorld('api',{
     updateValidFormation: (value,personneID,competenceID)=> ipcRenderer.invoke("updateValidFormation",{value,personneID,competenceID}),
     updateFormationPersonnes: (persFormID,newValue) => ipcRenderer.invoke('updateFormationPersonnes',{persFormID,newValue}),
     removeFormationPersonne: (formationID,personneID) => ipcRenderer.invoke('removeFormationPersonne',{formationID,personneID}),
+    selectImage: (callback) => ipcRenderer.on('selected-image', callback),
+    saveImage: (imagePath,ID_personne) => ipcRenderer.invoke('save-image', {imagePath,ID_personne}),
     closeCurrentWindow : ()=>ipcRenderer.invoke('closeCurrentWindow'),
+    checkFileExists: (filePath) => ipcRenderer.invoke('check-file-exists', filePath)
 })

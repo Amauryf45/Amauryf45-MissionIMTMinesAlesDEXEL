@@ -192,6 +192,8 @@ async function displayFormations(poste) {
     res.listeFormations.forEach(async formation => {
         let row = tableFormation.insertRow(); // Insère une nouvelle ligne
 
+        console.log("formation : "+formation.ID_Personne)
+
         const personne = (await api.getPersonneInfo(formation.ID_Personne)).infoPersonne;
 
         console.log(personne)
